@@ -36,10 +36,10 @@ This file breaks down the overall project implementation into specific tasks bas
   - [x] Environment variable support
   - [x] Default configuration values
 
-- [ ] Create main Client class (05_main_client_class.md)
-  - [ ] Constructor with dependency injection
-  - [ ] Configuration management
-  - [ ] Base API communication methods
+- [x] Create main Client class (05_main_client_class.md)
+  - [x] Constructor with dependency injection
+  - [x] Configuration management
+  - [x] Base API communication methods
 
 ## 3. API Endpoint Implementation (06_api_endpoints.md)
 
