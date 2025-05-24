@@ -2,6 +2,7 @@
 
 namespace GtrendsSdk\Configuration;
 
+use GtrendsSdk\Client;
 use GtrendsSdk\Contracts\ConfigurationInterface;
 use GtrendsSdk\Exceptions\ConfigurationException;
 
@@ -31,7 +32,7 @@ class Config implements ConfigurationInterface
         'base_uri' => 'https://trends.googleapis.com/v1/',
         'timeout' => 30,
         'headers' => [
-            'User-Agent' => 'GtrendsSdk/1.0',
+            'User-Agent' => 'GtrendsSdk/' . Client::SDK_VERSION,
             'Accept' => 'application/json',
         ],
         'retry' => [
