@@ -19,12 +19,12 @@ This file breaks down the overall project implementation into specific tasks bas
   - [x] RequestBuilderInterface
   - [x] ResponseHandlerInterface
 
-- [ ] Create exception hierarchy (02_exception_hierarchy.md)
-  - [ ] Base GtrendsException
-  - [ ] ApiException
-  - [ ] ConfigurationException
-  - [ ] NetworkException
-  - [ ] ValidationException
+- [x] Create exception hierarchy (02_exception_hierarchy.md)
+  - [x] Base GtrendsException
+  - [x] ApiException
+  - [x] ConfigurationException
+  - [x] NetworkException
+  - [x] ValidationException
 
 - [ ] Create HTTP layer (03_http_layer.md)
   - [ ] RequestBuilder class
