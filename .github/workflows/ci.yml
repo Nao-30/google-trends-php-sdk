@@ -1,75 +1,86 @@
-name: CI
+name: PHP CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, develop ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, develop ]
 
 jobs:
-  tests:
+  build:
     runs-on: ubuntu-latest
     strategy:
-      fail-fast: true
       matrix:
-        php: [7.4, 8.0, 8.1, 8.2]
-        stability: [prefer-stable]
-
-    name: PHP ${{ matrix.php }} - ${{ matrix.stability }}
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php }}
-          extensions: json, dom, curl, mbstring
-          coverage: none
-
-      - name: Install dependencies
-        run: composer update --${{ matrix.stability }} --prefer-dist --no-interaction
-
-      - name: Execute tests
-        run: vendor/bin/phpunit
-
-  coding-standards:
-    runs-on: ubuntu-latest
+        php-versions: ['7.4', '8.0', '8.1']
+    
+    name: PHP ${{ matrix.php-versions }}
     
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: 8.0
-          extensions: json, dom, curl, mbstring
-          coverage: none
-
-      - name: Install dependencies
-        run: composer update --prefer-stable --prefer-dist --no-interaction
-
-      - name: Check coding standards
-        run: vendor/bin/phpcs
-
-  static-analysis:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php-versions }}
+        extensions: json, mbstring, curl
+        coverage: xdebug
+        tools: composer:v2, phpunit, php-cs-fixer, phpstan
+    
+    - name: Validate composer.json
+      run: composer validate --strict
+    
+    - name: Cache Composer packages
+      id: composer-cache
+      uses: actions/cache@v3
+      with:
+        path: vendor
+        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-php-
+    
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress --no-interaction
+    
+    - name: Check code style
+      run: ./vendor/bin/php-cs-fixer fix --dry-run --diff
+    
+    - name: Static analysis
+      run: ./vendor/bin/phpstan analyse src tests --level=5
+    
+    - name: Run test suite
+      run: ./vendor/bin/phpunit --coverage-clover=coverage.xml
+    
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+        fail_ci_if_error: false
+    
+  laravel-tests:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        laravel-versions: ['8.*', '9.*']
+    
+    name: Laravel ${{ matrix.laravel-versions }}
     
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: 8.0
-          extensions: json, dom, curl, mbstring
-          coverage: none
-
-      - name: Install dependencies
-        run: composer update --prefer-stable --prefer-dist --no-interaction
-
-      - name: Run static analysis
-        run: vendor/bin/phpstan analyse src tests --level=5 
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.0'
+        extensions: json, mbstring, curl
+        coverage: none
+        tools: composer:v2
+    
+    - name: Install dependencies
+      run: |
+        composer require "laravel/framework:${{ matrix.laravel-versions }}" --no-interaction --no-update
+        composer update --prefer-dist --no-interaction --no-progress
+    
+    - name: Run Laravel tests
+      run: ./vendor/bin/phpunit --testsuite=Laravel 
