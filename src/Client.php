@@ -26,6 +26,13 @@ use Psr\Log\NullLogger;
 class Client implements ClientInterface
 {
     /**
+     * SDK version number
+     *
+     * @var string
+     */
+    public const SDK_VERSION = '1.0.0';
+
+    /**
      * @var ConfigurationInterface The SDK configuration
      */
     protected ConfigurationInterface $config;

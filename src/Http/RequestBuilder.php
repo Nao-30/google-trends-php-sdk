@@ -2,6 +2,7 @@
 
 namespace GtrendsSdk\Http;
 
+use GtrendsSdk\Client;
 use GtrendsSdk\Contracts\ConfigurationInterface;
 use GtrendsSdk\Contracts\RequestBuilderInterface;
 use GtrendsSdk\Exceptions\ValidationException;
@@ -28,7 +29,7 @@ class RequestBuilder implements RequestBuilderInterface
     protected array $defaultHeaders = [
         'Content-Type' => 'application/json',
         'Accept' => 'application/json',
-        'User-Agent' => 'gtrends-php-sdk/1.0',
+        'User-Agent' => 'gtrends-php-sdk/' . Client::SDK_VERSION,
     ];
 
     /**
