@@ -111,8 +111,8 @@ This file breaks down the overall project implementation into specific tasks bas
 ## 10. Open Source Preparation (11_open_source_preparation.md)
 
 - [x] Create code of conduct
-- [ ] Develop contributing guidelines
-- [ ] Create issue templates
-- [ ] Create pull request template
-- [ ] Set up funding configuration
-- [ ] Prepare community health files 
+- [x] Develop contributing guidelines
+- [x] Create issue templates
+- [x] Create pull request template
+- [x] Set up funding configuration
+- [x] Prepare community health files 
