@@ -1,0 +1,11 @@
+{
+  "status": "error",
+  "error": {
+    "code": "invalid_request",
+    "message": "Invalid request parameters",
+    "details": {
+      "field": "region",
+      "reason": "Invalid region code. Must be a valid ISO 3166-1 alpha-2 code."
+    }
+  }
+} 

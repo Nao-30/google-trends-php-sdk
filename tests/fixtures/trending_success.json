@@ -1,0 +1,27 @@
+{
+  "status": "success",
+  "data": {
+    "trends": [
+      {
+        "title": "Sample Trend 1",
+        "traffic": 450000,
+        "related_queries": ["query 1", "query 2"]
+      },
+      {
+        "title": "Sample Trend 2",
+        "traffic": 320000,
+        "related_queries": ["query 3", "query 4"]
+      },
+      {
+        "title": "Sample Trend 3",
+        "traffic": 180000,
+        "related_queries": ["query 5", "query 6"]
+      }
+    ],
+    "meta": {
+      "region": "US",
+      "date": "2023-05-30",
+      "total_results": 3
+    }
+  }
+} 
