@@ -31,10 +31,10 @@ This file breaks down the overall project implementation into specific tasks bas
   - [x] ResponseHandler class
   - [x] HTTP client wrapper
 
-- [ ] Create configuration management (04_configuration_management.md)
-  - [ ] Config class
-  - [ ] Environment variable support
-  - [ ] Default configuration values
+- [x] Create configuration management (04_configuration_management.md)
+  - [x] Config class
+  - [x] Environment variable support
+  - [x] Default configuration values
 
 - [ ] Create main Client class (05_main_client_class.md)
   - [ ] Constructor with dependency injection
