@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<ruleset name="Gtrends PHP SDK Coding Standard">
+    <description>Coding standard for Gtrends PHP SDK</description>
+
+    <!-- Paths to check -->
+    <file>src</file>
+    <file>tests</file>
+
+    <!-- Display progress and sniff information -->
+    <arg value="p"/>
+    <arg value="s"/>
+    
+    <!-- Use colors -->
+    <arg name="colors"/>
+    
+    <!-- Use PSR-12 as base standard -->
+    <rule ref="PSR12"/>
+    
+    <!-- PHP compatibility checks -->
+    <config name="php_version" value="70400"/>
+    
+    <!-- Exclude paths -->
+    <exclude-pattern>vendor/*</exclude-pattern>
+    <exclude-pattern>node_modules/*</exclude-pattern>
+    <exclude-pattern>*.js</exclude-pattern>
+    <exclude-pattern>*.css</exclude-pattern>
+</ruleset> 

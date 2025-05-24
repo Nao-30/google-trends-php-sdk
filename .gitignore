@@ -1,0 +1,15 @@
+/vendor/
+/composer.lock
+/.phpunit.result.cache
+/.phpunit.cache/
+/coverage/
+/.idea/
+/.vscode/
+/.DS_Store
+/node_modules/
+/reffere-helpers/
+/PM/
+*.log
+*.cache
+*.swp
+*.swo 
