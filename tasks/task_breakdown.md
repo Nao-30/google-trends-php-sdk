@@ -26,10 +26,10 @@ This file breaks down the overall project implementation into specific tasks bas
   - [x] NetworkException
   - [x] ValidationException
 
-- [ ] Create HTTP layer (03_http_layer.md)
-  - [ ] RequestBuilder class
-  - [ ] ResponseHandler class
-  - [ ] HTTP client wrapper
+- [x] Create HTTP layer (03_http_layer.md)
+  - [x] RequestBuilder class
+  - [x] ResponseHandler class
+  - [x] HTTP client wrapper
 
 - [ ] Create configuration management (04_configuration_management.md)
   - [ ] Config class
