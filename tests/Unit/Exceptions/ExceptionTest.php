@@ -3,11 +3,11 @@
 namespace Gtrends\Sdk\Tests\Unit\Exceptions;
 
 use Gtrends\Sdk\Tests\TestCase;
-use Gtrends\Exceptions\GtrendsException;
-use Gtrends\Exceptions\ApiException;
-use Gtrends\Exceptions\ConfigurationException;
-use Gtrends\Exceptions\NetworkException;
-use Gtrends\Exceptions\ValidationException;
+use Gtrends\Sdk\Exceptions\GtrendsException;
+use Gtrends\Sdk\Exceptions\ApiException;
+use Gtrends\Sdk\Exceptions\ConfigurationException;
+use Gtrends\Sdk\Exceptions\NetworkException;
+use Gtrends\Sdk\Exceptions\ValidationException;
 
 class ExceptionTest extends TestCase
 {

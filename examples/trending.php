@@ -9,7 +9,7 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 // Initialize the client
-$client = new Gtrends\Client([
+$client = new Gtrends\Sdk\Client([
     'base_uri' => 'https://trends-api-url.com',
     'timeout' => 30,
     'debug' => true

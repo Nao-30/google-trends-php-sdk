@@ -1,9 +1,9 @@
 <?php
 
-namespace GtrendsSdk\Http;
+namespace Gtrends\Sdk\Http;
 
-use GtrendsSdk\Contracts\ConfigurationInterface;
-use GtrendsSdk\Exceptions\NetworkException;
+use Gtrends\Sdk\Contracts\ConfigurationInterface;
+use Gtrends\Sdk\Exceptions\NetworkException;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\HandlerStack;
@@ -19,7 +19,7 @@ use Psr\Log\NullLogger;
  * 
  * Wrapper for GuzzleHttp client that handles retry logic, timeouts, and error handling.
  * 
- * @package GtrendsSdk\Http
+ * @package Gtrends\Sdk\Http
  */
 class HttpClient
 {
@@ -179,6 +179,18 @@ class HttpClient
      */
     public function sendRequest(RequestInterface $request): ResponseInterface
     {
+        // If real HTTP requests are disabled, throw a NetworkException to simulate a network error
+        if (!$this->config->shouldMakeRealRequests()) {
+            throw new NetworkException(
+                'HTTP requests are disabled in test mode',
+                400, 
+                null,
+                ['request_uri' => (string) $request->getUri()],
+                (string) $request->getUri(),
+                $request->getMethod()
+            );
+        }
+        
         try {
             return $this->client->send($request, [
                 'timeout' => $this->config->getTimeout(),
@@ -187,8 +199,11 @@ class HttpClient
         } catch (GuzzleException $e) {
             throw new NetworkException(
                 'Network error occurred: ' . $e->getMessage(),
-                ['exception' => $e],
-                $e
+                0, // Error code should be an integer
+                $e, // Previous exception
+                ['exception' => get_class($e)], // Context as array
+                (string) $request->getUri(), // URL
+                $request->getMethod() // Method
             );
         }
     }

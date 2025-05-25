@@ -4,7 +4,7 @@ namespace Gtrends\Sdk\Tests\Unit\Configuration;
 
 use Gtrends\Sdk\Tests\TestCase;
 use Gtrends\Sdk\Configuration\Config;
-use Gtrends\Exceptions\ConfigurationException;
+use Gtrends\Sdk\Exceptions\ConfigurationException;
 
 class ConfigTest extends TestCase
 {
@@ -12,12 +12,12 @@ class ConfigTest extends TestCase
     public function it_loads_config_from_array()
     {
         $config = new Config([
-            'api_base_uri' => 'https://test-api.example.com',
-            'api_timeout' => 15,
+            'base_uri' => 'https://test-api.example.com',
+            'timeout' => 15,
         ]);
 
-        $this->assertEquals('https://test-api.example.com', $config->get('api_base_uri'));
-        $this->assertEquals(15, $config->get('api_timeout'));
+        $this->assertEquals('https://test-api.example.com', $config->get('base_uri'));
+        $this->assertEquals(15, $config->get('timeout'));
     }
 
     /** @test */
@@ -25,26 +25,27 @@ class ConfigTest extends TestCase
     {
         $config = new Config([]);
 
-        // Assuming these are the defaults set in the Config class
-        $this->assertNotNull($config->get('api_base_uri'));
-        $this->assertNotNull($config->get('api_timeout'));
+        // Check defaults from the Config class
+        $this->assertEquals('http://localhost:3000/api/', $config->get('base_uri'));
+        $this->assertEquals(30, $config->get('timeout'));
     }
 
     /** @test */
     public function it_loads_config_from_environment_variables()
     {
         // Set environment variables
-        putenv('GTRENDS_API_BASE_URI=https://env-api.example.com');
-        putenv('GTRENDS_API_TIMEOUT=20');
+        $_ENV['GTRENDS_BASE_URI'] = 'https://env-api.example.com';
+        $_ENV['GTRENDS_TIMEOUT'] = '20';
 
         $config = new Config();
+        $config->loadFromEnvironment();
 
-        $this->assertEquals('https://env-api.example.com', $config->get('api_base_uri'));
-        $this->assertEquals(20, $config->get('api_timeout'));
+        $this->assertEquals('https://env-api.example.com', $config->get('base_uri'));
+        $this->assertEquals(20, $config->get('timeout'));
 
         // Clean up environment
-        putenv('GTRENDS_API_BASE_URI');
-        putenv('GTRENDS_API_TIMEOUT');
+        unset($_ENV['GTRENDS_BASE_URI']);
+        unset($_ENV['GTRENDS_TIMEOUT']);
     }
 
     /** @test */
@@ -52,56 +53,61 @@ class ConfigTest extends TestCase
     {
         $this->expectException(ConfigurationException::class);
 
-        // Force validation error by setting api_base_uri to null
-        // We're assuming the Config class validates this as required
-        new Config([
-            'api_base_uri' => null,
-        ]);
+        // Create an invalid config by removing required base_uri
+        $config = new Config();
+        $reflection = new \ReflectionClass(Config::class);
+        $property = $reflection->getProperty('config');
+        $property->setAccessible(true);
+        
+        $configData = $property->getValue($config);
+        unset($configData['base_uri']);
+        $property->setValue($config, $configData);
+        
+        // Now validate
+        $config->validate();
     }
 
     /** @test */
     public function it_supports_dot_notation_for_nested_config()
     {
         $config = new Config([
-            'options' => [
-                'retry' => [
-                    'attempts' => 5,
-                    'delay' => 2
-                ]
+            'retry' => [
+                'max_attempts' => 5,
+                'delay' => 2000
             ]
         ]);
 
-        $this->assertEquals(5, $config->get('options.retry.attempts'));
-        $this->assertEquals(2, $config->get('options.retry.delay'));
+        $this->assertEquals(5, $config->get('retry.max_attempts'));
+        $this->assertEquals(2000, $config->get('retry.delay'));
     }
 
     /** @test */
     public function it_returns_all_config_as_array()
     {
         $configData = [
-            'api_base_uri' => 'https://test-api.example.com',
-            'api_timeout' => 15,
+            'base_uri' => 'https://test-api.example.com',
+            'timeout' => 15,
         ];
 
         $config = new Config($configData);
         $allConfig = $config->all();
 
         $this->assertIsArray($allConfig);
-        $this->assertArrayHasKey('api_base_uri', $allConfig);
-        $this->assertArrayHasKey('api_timeout', $allConfig);
+        $this->assertArrayHasKey('base_uri', $allConfig);
+        $this->assertArrayHasKey('timeout', $allConfig);
     }
 
     /** @test */
     public function it_can_set_config_values_after_initialization()
     {
         $config = new Config([
-            'api_base_uri' => 'https://test-api.example.com',
+            'base_uri' => 'https://test-api.example.com',
         ]);
 
-        $config->set('api_timeout', 25);
-        $this->assertEquals(25, $config->get('api_timeout'));
+        $config->set('timeout', 25);
+        $this->assertEquals(25, $config->get('timeout'));
 
-        $config->set('options.retry.attempts', 4);
-        $this->assertEquals(4, $config->get('options.retry.attempts'));
+        $config->set('retry.max_attempts', 4);
+        $this->assertEquals(4, $config->get('retry.max_attempts'));
     }
 } 

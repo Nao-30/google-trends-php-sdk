@@ -1,10 +1,10 @@
 <?php
 
-namespace GtrendsSdk\Configuration;
+namespace Gtrends\Sdk\Configuration;
 
-use GtrendsSdk\Client;
-use GtrendsSdk\Contracts\ConfigurationInterface;
-use GtrendsSdk\Exceptions\ConfigurationException;
+use Gtrends\Sdk\Client;
+use Gtrends\Sdk\Contracts\ConfigurationInterface;
+use Gtrends\Sdk\Exceptions\ConfigurationException;
 
 /**
  * Configuration management class for the Google Trends PHP SDK.
@@ -12,7 +12,7 @@ use GtrendsSdk\Exceptions\ConfigurationException;
  * This class handles loading, validating, and retrieving configuration values
  * from various sources including arrays, environment variables, and files.
  *
- * @package GtrendsSdk\Configuration
+ * @package Gtrends\Sdk\Configuration
  */
 class Config implements ConfigurationInterface
 {
@@ -29,10 +29,10 @@ class Config implements ConfigurationInterface
      * @var array<string, mixed>
      */
     protected array $defaults = [
-        'base_uri' => 'https://trends.googleapis.com/v1/',
+        'base_uri' => 'http://localhost:3000/api/',
         'timeout' => 30,
         'headers' => [
-            'User-Agent' => 'GtrendsSdk/' . Client::SDK_VERSION,
+            'User-Agent' => 'Gtrends/Sdk/' . Client::SDK_VERSION,
             'Accept' => 'application/json',
         ],
         'retry' => [
@@ -73,6 +73,11 @@ class Config implements ConfigurationInterface
         'pagination.max_items' => ['type' => 'integer', 'min' => 5, 'max' => 1000, 'required' => false],
         'debug' => ['type' => 'boolean', 'required' => false],
     ];
+
+    /**
+     * @var bool Whether to make real HTTP requests.
+     */
+    protected bool $makeRealRequests = true;
 
     /**
      * Create a new Config instance.
@@ -370,11 +375,53 @@ class Config implements ConfigurationInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Get the API base URL.
+     *
+     * @return string
+     */
+    public function getApiBaseUrl(): string
+    {
+        return $this->get('base_uri', $this->defaults['base_uri']);
+    }
+
+    /**
+     * Get the maximum number of retry attempts.
+     *
+     * @return int
+     */
+    public function getMaxRetries(): int
+    {
+        return $this->get('retry.max_attempts', $this->defaults['retry']['max_attempts']);
+    }
+    
+    /**
+     * Get the retry delay in milliseconds.
+     *
+     * @return int
+     */
+    public function getRetryDelay(): int
+    {
+        return $this->get('retry.delay', $this->defaults['retry']['delay']);
+    }
+    
+    /**
+     * Get the retry delay multiplier.
+     *
+     * @return float
+     */
+    public function getRetryMultiplier(): float
+    {
+        return $this->get('retry.multiplier', $this->defaults['retry']['multiplier']);
+    }
+    
+    /**
+     * Alias for getBaseUri to maintain compatibility.
+     *
+     * @return string
      */
     public function getBaseUri(): string
     {
-        return $this->get('base_uri');
+        return $this->getApiBaseUrl();
     }
 
     /**
@@ -411,5 +458,67 @@ class Config implements ConfigurationInterface
     public function isDebugEnabled(): bool
     {
         return (bool) $this->get('debug', false);
+    }
+
+    /**
+     * Get the API key.
+     *
+     * @return string|null
+     */
+    public function getApiKey(): ?string
+    {
+        return $this->get('api_key');
+    }
+    
+    /**
+     * Check if debug mode is enabled.
+     *
+     * @return bool
+     */
+    public function isDebugMode(): bool
+    {
+        return $this->isDebugEnabled();
+    }
+
+    /**
+     * Get the connection timeout in seconds.
+     *
+     * @return int
+     */
+    public function getConnectTimeout(): int
+    {
+        return $this->get('timeout', $this->defaults['timeout']);
+    }
+
+    /**
+     * Check if SSL verification should be enabled.
+     *
+     * @return bool
+     */
+    public function shouldVerifySsl(): bool
+    {
+        return $this->get('verify_ssl', true);
+    }
+
+    /**
+     * Set whether to make real HTTP requests or not.
+     *
+     * @param bool $enable Whether to enable real HTTP requests
+     * @return self
+     */
+    public function setMakeRealRequests(bool $enable): self
+    {
+        $this->makeRealRequests = $enable;
+        return $this;
+    }
+
+    /**
+     * Check if real HTTP requests are enabled.
+     *
+     * @return bool True if real HTTP requests are enabled
+     */
+    public function shouldMakeRealRequests(): bool
+    {
+        return $this->makeRealRequests;
     }
 } 

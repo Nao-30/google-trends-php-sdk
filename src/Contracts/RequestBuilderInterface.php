@@ -1,6 +1,6 @@
 <?php
 
-namespace GtrendsSdk\Contracts;
+namespace Gtrends\Sdk\Contracts;
 
 use Psr\Http\Message\RequestInterface;
 
@@ -10,7 +10,7 @@ use Psr\Http\Message\RequestInterface;
  * Defines the contract for building HTTP requests in the Google Trends PHP SDK.
  * This interface outlines methods for constructing and configuring HTTP requests.
  *
- * @package GtrendsSdk\Contracts
+ * @package Gtrends\Sdk\Contracts
  */
 interface RequestBuilderInterface
 {
@@ -22,7 +22,7 @@ interface RequestBuilderInterface
      * @param array $headers HTTP headers
      * @return RequestInterface PSR-7 Request object
      * 
-     * @throws \GtrendsSdk\Exceptions\ValidationException When the parameters are invalid
+     * @throws \Gtrends\Sdk\Exceptions\ValidationException When the parameters are invalid
      */
     public function createGetRequest(string $endpoint, array $queryParams = [], array $headers = []): RequestInterface;
     
@@ -34,7 +34,7 @@ interface RequestBuilderInterface
      * @param array $headers HTTP headers
      * @return RequestInterface PSR-7 Request object
      * 
-     * @throws \GtrendsSdk\Exceptions\ValidationException When the parameters are invalid
+     * @throws \Gtrends\Sdk\Exceptions\ValidationException When the parameters are invalid
      */
     public function createPostRequest(string $endpoint, array $data = [], array $headers = []): RequestInterface;
     
@@ -70,7 +70,7 @@ interface RequestBuilderInterface
      * @param array $rules Validation rules
      * @return bool True if valid, false otherwise
      * 
-     * @throws \GtrendsSdk\Exceptions\ValidationException When the parameters are invalid
+     * @throws \Gtrends\Sdk\Exceptions\ValidationException When the parameters are invalid
      */
     public function validateParams(array $params, array $rules): bool;
     

@@ -1,16 +1,16 @@
 <?php
 
-namespace GtrendsSdk\Contracts;
+namespace Gtrends\Sdk\Contracts;
 
 use Psr\Http\Message\ResponseInterface;
 
 /**
  * Interface ResponseHandlerInterface
  *
- * Defines the contract for handling HTTP responses in the Google Trends PHP SDK.
- * This interface outlines methods for processing and transforming API responses.
+ * Defines the contract for handling API responses in the Google Trends PHP SDK.
+ * This interface outlines methods for processing, validating, and transforming API responses.
  *
- * @package GtrendsSdk\Contracts
+ * @package Gtrends\Sdk\Contracts
  */
 interface ResponseHandlerInterface
 {
@@ -20,7 +20,7 @@ interface ResponseHandlerInterface
      * @param ResponseInterface $response PSR-7 Response object
      * @return array Processed response data
      * 
-     * @throws \GtrendsSdk\Exceptions\ApiException When the API returns an error
+     * @throws \Gtrends\Sdk\Exceptions\ApiException When the API returns an error
      */
     public function processResponse(ResponseInterface $response): array;
     
@@ -30,7 +30,7 @@ interface ResponseHandlerInterface
      * @param ResponseInterface $response PSR-7 Response object
      * @return array Decoded JSON data
      * 
-     * @throws \GtrendsSdk\Exceptions\ApiException When the response cannot be decoded
+     * @throws \Gtrends\Sdk\Exceptions\ApiException When the response cannot be decoded
      */
     public function extractJson(ResponseInterface $response): array;
     
@@ -66,7 +66,7 @@ interface ResponseHandlerInterface
      * @param array $requiredFields List of required fields
      * @return bool True if valid, false otherwise
      * 
-     * @throws \GtrendsSdk\Exceptions\ApiException When required fields are missing
+     * @throws \Gtrends\Sdk\Exceptions\ApiException When required fields are missing
      */
     public function validateResponseData(array $data, array $requiredFields): bool;
     

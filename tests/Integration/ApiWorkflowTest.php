@@ -5,14 +5,72 @@ namespace Gtrends\Sdk\Tests\Integration;
 use Gtrends\Sdk\Tests\TestCase;
 use Gtrends\Sdk\Client;
 use Gtrends\Sdk\Configuration\Config;
+use Gtrends\Sdk\Http\RequestBuilder;
+use Gtrends\Sdk\Http\ResponseHandler;
+use Gtrends\Sdk\Http\HttpClient;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Psr7\Response;
-use Gtrends\Exceptions\ApiException;
+use Gtrends\Sdk\Exceptions\ApiException;
+use GuzzleHttp\Psr7\Request;
+use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
 class ApiWorkflowTest extends TestCase
 {
+    /**
+     * Create a mock HttpClient that returns predetermined responses
+     *
+     * @param array $responses Array of Response objects
+     * @return HttpClient|MockObject
+     */
+    protected function createMockHttpClient(array $responses): MockObject
+    {
+        $mockHttpClient = $this->createMock(HttpClient::class);
+        
+        // Configure the mock to return predetermined responses
+        $mockHttpClient->method('sendRequest')
+            ->willReturnCallback(function (RequestInterface $request) use (&$responses) {
+                if (empty($responses)) {
+                    $this->fail('No more mock responses available for request: ' . $request->getUri());
+                }
+                return array_shift($responses);
+            });
+            
+        return $mockHttpClient;
+    }
+
+    /**
+     * Set up a client with mock responses
+     *
+     * @param array $mockResponses Array of Response objects
+     * @return Client
+     */
+    protected function setupClientWithMocks(array $mockResponses): Client
+    {
+        // Create test config
+        $config = $this->createConfig(['base_uri' => 'http://localhost:3000/api/']);
+        
+        $requestBuilder = new RequestBuilder($config);
+        $responseHandler = new ResponseHandler($config);
+        
+        // Create mock HttpClient
+        $mockHttpClient = $this->createMockHttpClient($mockResponses);
+        
+        // Create the SDK client
+        $client = new Client($config, $requestBuilder, $responseHandler);
+        
+        // Replace the HttpClient with our mock
+        $clientReflection = new \ReflectionClass(Client::class);
+        $httpClientProperty = $clientReflection->getProperty('httpClient');
+        $httpClientProperty->setAccessible(true);
+        $httpClientProperty->setValue($client, $mockHttpClient);
+        
+        return $client;
+    }
+
     /** @test */
     public function it_performs_complete_trending_search_workflow()
     {
@@ -24,17 +82,11 @@ class ApiWorkflowTest extends TestCase
             new Response(200, ['Content-Type' => 'application/json'], $trendingData),
         ];
         
-        // Create mock HTTP client
-        $mock = new MockHandler($mockResponses);
-        $handlerStack = HandlerStack::create($mock);
-        $guzzleClient = new GuzzleClient(['handler' => $handlerStack]);
-        
-        // Create client
-        $config = $this->createConfig();
-        $client = new Client($config, $guzzleClient);
+        // Setup client with mocks
+        $client = $this->setupClientWithMocks($mockResponses);
         
         // Execute workflow
-        $result = $client->getTrending(['region' => 'US']);
+        $result = $client->trending('US');
         
         // Verify results
         $this->assertIsArray($result);
@@ -68,17 +120,11 @@ class ApiWorkflowTest extends TestCase
             new Response(200, ['Content-Type' => 'application/json'], json_encode($mockData)),
         ];
         
-        // Create mock HTTP client
-        $mock = new MockHandler($mockResponses);
-        $handlerStack = HandlerStack::create($mock);
-        $guzzleClient = new GuzzleClient(['handler' => $handlerStack]);
-        
-        // Create client
-        $config = $this->createConfig();
-        $client = new Client($config, $guzzleClient);
+        // Setup client with mocks
+        $client = $this->setupClientWithMocks($mockResponses);
         
         // Execute workflow
-        $result = $client->getRelatedTopics(['keyword' => 'php', 'period' => '30d']);
+        $result = $client->relatedTopics('php');
         
         // Verify results
         $this->assertIsArray($result);
@@ -93,25 +139,30 @@ class ApiWorkflowTest extends TestCase
     public function it_handles_error_responses_appropriately()
     {
         // Create error data
-        $errorData = $this->loadFixture('api_error');
+        $errorData = json_encode([
+            'status' => 'error',
+            'error' => [
+                'code' => 'invalid_request',
+                'message' => 'API request failed',
+                'details' => [
+                    'field' => 'region',
+                    'reason' => 'Invalid region code. Must be a valid ISO 3166-1 alpha-2 code.'
+                ]
+            ]
+        ]);
         
         // Create mock responses
         $mockResponses = [
             new Response(400, ['Content-Type' => 'application/json'], $errorData),
         ];
         
-        // Create mock HTTP client
-        $mock = new MockHandler($mockResponses);
-        $handlerStack = HandlerStack::create($mock);
-        $guzzleClient = new GuzzleClient(['handler' => $handlerStack]);
-        
-        // Create client
-        $config = $this->createConfig();
-        $client = new Client($config, $guzzleClient);
+        // Setup client with mocks
+        $client = $this->setupClientWithMocks($mockResponses);
         
         // Execute workflow and expect exception
         $this->expectException(ApiException::class);
-        $client->getTrending(['region' => 'INVALID']);
+        $this->expectExceptionMessage('API request failed');
+        $client->trending('INVALID');
     }
     
     /** @test */
@@ -137,17 +188,11 @@ class ApiWorkflowTest extends TestCase
             new Response(200, ['Content-Type' => 'application/json'], json_encode($mockData)),
         ];
         
-        // Create mock HTTP client
-        $mock = new MockHandler($mockResponses);
-        $handlerStack = HandlerStack::create($mock);
-        $guzzleClient = new GuzzleClient(['handler' => $handlerStack]);
-        
-        // Create client
-        $config = $this->createConfig();
-        $client = new Client($config, $guzzleClient);
+        // Setup client with mocks
+        $client = $this->setupClientWithMocks($mockResponses);
         
         // Execute workflow
-        $result = $client->getComparison(['topics' => ['php', 'javascript'], 'period' => '90d']);
+        $result = $client->compare(['php', 'javascript']);
         
         // Verify results
         $this->assertIsArray($result);

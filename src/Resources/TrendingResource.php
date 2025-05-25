@@ -1,12 +1,12 @@
 <?php
 
-namespace GtrendsSdk\Resources;
+namespace Gtrends\Sdk\Resources;
 
-use GtrendsSdk\Contracts\ConfigurationInterface;
-use GtrendsSdk\Contracts\RequestBuilderInterface;
-use GtrendsSdk\Contracts\ResponseHandlerInterface;
-use GtrendsSdk\Exceptions\ValidationException;
-use GtrendsSdk\Http\HttpClient;
+use Gtrends\Sdk\Contracts\ConfigurationInterface;
+use Gtrends\Sdk\Contracts\RequestBuilderInterface;
+use Gtrends\Sdk\Contracts\ResponseHandlerInterface;
+use Gtrends\Sdk\Exceptions\ValidationException;
+use Gtrends\Sdk\Http\HttpClient;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
@@ -16,7 +16,7 @@ use Psr\Log\NullLogger;
  * This class encapsulates all operations related to the trending searches
  * endpoint of the Google Trends API.
  *
- * @package GtrendsSdk\Resources
+ * @package Gtrends\Sdk\Resources
  */
 class TrendingResource
 {

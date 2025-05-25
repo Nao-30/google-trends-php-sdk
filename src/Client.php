@@ -1,16 +1,16 @@
 <?php
 
-namespace GtrendsSdk;
+namespace Gtrends\Sdk;
 
-use GtrendsSdk\Configuration\Config;
-use GtrendsSdk\Contracts\ClientInterface;
-use GtrendsSdk\Contracts\ConfigurationInterface;
-use GtrendsSdk\Contracts\RequestBuilderInterface;
-use GtrendsSdk\Contracts\ResponseHandlerInterface;
-use GtrendsSdk\Exceptions\ApiException;
-use GtrendsSdk\Exceptions\NetworkException;
-use GtrendsSdk\Exceptions\ValidationException;
-use GtrendsSdk\Http\HttpClient;
+use Gtrends\Sdk\Configuration\Config;
+use Gtrends\Sdk\Contracts\ClientInterface;
+use Gtrends\Sdk\Contracts\ConfigurationInterface;
+use Gtrends\Sdk\Contracts\RequestBuilderInterface;
+use Gtrends\Sdk\Contracts\ResponseHandlerInterface;
+use Gtrends\Sdk\Exceptions\ApiException;
+use Gtrends\Sdk\Exceptions\NetworkException;
+use Gtrends\Sdk\Exceptions\ValidationException;
+use Gtrends\Sdk\Http\HttpClient;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
@@ -21,7 +21,7 @@ use Psr\Log\NullLogger;
  * Google Trends API endpoints. It manages configuration, HTTP communication,
  * and provides methods for each API endpoint.
  *
- * @package GtrendsSdk
+ * @package Gtrends\Sdk
  */
 class Client implements ClientInterface
 {
@@ -40,12 +40,12 @@ class Client implements ClientInterface
     /**
      * @var RequestBuilderInterface The request builder
      */
-    protected RequestBuilderInterface $requestBuilder;
+    protected ?RequestBuilderInterface $requestBuilder = null;
 
     /**
      * @var ResponseHandlerInterface The response handler
      */
-    protected ResponseHandlerInterface $responseHandler;
+    protected ?ResponseHandlerInterface $responseHandler = null;
 
     /**
      * @var HttpClient The HTTP client

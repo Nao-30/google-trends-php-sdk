@@ -7,7 +7,7 @@ This document details the configuration options available for the Google Trends 
 When instantiating the SDK client, you can pass a configuration array with various options:
 
 ```php
-$client = new Gtrends\Client([
+$client = new Gtrends\Sdk\Client([
     'base_uri' => 'https://trends-api-url.com',
     'timeout' => 30,
     'retry_attempts' => 3,
@@ -58,7 +58,7 @@ GTRENDS_TIMEOUT=60
 GTRENDS_DEBUG=true
 
 // PHP code
-$client = new Gtrends\Client(); // Will use environment variables
+$client = new Gtrends\Sdk\Client(); // Will use environment variables
 ```
 
 ## Using Config Files
@@ -66,7 +66,7 @@ $client = new Gtrends\Client(); // Will use environment variables
 You can also use a configuration file to load settings:
 
 ```php
-$client = new Gtrends\Client();
+$client = new Gtrends\Sdk\Client();
 $client->loadConfigFile('/path/to/config.php');
 ```
 
@@ -128,7 +128,7 @@ return [
 You can change configuration values at runtime:
 
 ```php
-$client = new Gtrends\Client([
+$client = new Gtrends\Sdk\Client([
     'base_uri' => 'https://trends-api-url.com'
 ]);
 
@@ -151,7 +151,7 @@ You can configure a custom PSR-3 compatible logger:
 
 ```php
 $logger = new MyCustomLogger();
-$client = new Gtrends\Client([
+$client = new Gtrends\Sdk\Client([
     'base_uri' => 'https://trends-api-url.com',
     'logger' => $logger
 ]);
@@ -169,7 +169,7 @@ $httpClient = new \GuzzleHttp\Client([
     'handler' => $stack
 ]);
 
-$client = new Gtrends\Client([
+$client = new Gtrends\Sdk\Client([
     'base_uri' => 'https://trends-api-url.com',
     'http_client' => $httpClient
 ]);
@@ -182,7 +182,7 @@ You can customize the cache storage implementation:
 ```php
 $cache = new CustomCacheImplementation();
 
-$client = new Gtrends\Client([
+$client = new Gtrends\Sdk\Client([
     'base_uri' => 'https://trends-api-url.com',
     'cache_enabled' => true,
     'cache_storage' => $cache
@@ -194,7 +194,7 @@ $client = new Gtrends\Client([
 When debug mode is enabled, the SDK will log detailed information about requests and responses:
 
 ```php
-$client = new Gtrends\Client([
+$client = new Gtrends\Sdk\Client([
     'base_uri' => 'https://trends-api-url.com',
     'debug' => true
 ]);

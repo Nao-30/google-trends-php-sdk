@@ -1,10 +1,10 @@
 <?php
 
-namespace GtrendsSdk\Http;
+namespace Gtrends\Sdk\Http;
 
-use GtrendsSdk\Contracts\ConfigurationInterface;
-use GtrendsSdk\Contracts\ResponseHandlerInterface;
-use GtrendsSdk\Exceptions\ApiException;
+use Gtrends\Sdk\Contracts\ConfigurationInterface;
+use Gtrends\Sdk\Contracts\ResponseHandlerInterface;
+use Gtrends\Sdk\Exceptions\ApiException;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -12,7 +12,7 @@ use Psr\Http\Message\ResponseInterface;
  * 
  * Implements the ResponseHandlerInterface for handling HTTP responses from the Google Trends API.
  * 
- * @package GtrendsSdk\Http
+ * @package Gtrends\Sdk\Http
  */
 class ResponseHandler implements ResponseHandlerInterface
 {
@@ -38,8 +38,24 @@ class ResponseHandler implements ResponseHandlerInterface
     {
         if (!$this->isSuccessful($response)) {
             $errorDetails = $this->getErrorDetails($response);
+            
+            // Make sure we have a string message
+            $message = is_string($errorDetails['message'] ?? null) 
+                ? $errorDetails['message'] 
+                : 'API request failed';
+                
+            // Make sure we have an integer code
+            $code = is_int($errorDetails['code'] ?? null) 
+                ? $errorDetails['code'] 
+                : $response->getStatusCode();
+                
             throw new ApiException(
-                $errorDetails['message'] ?? 'API request failed',
+                $message,
+                $code,
+                null,
+                [],
+                $response->getStatusCode(),
+                $errorDetails['error_code'] ?? null,
                 $errorDetails
             );
         }
@@ -63,6 +79,11 @@ class ResponseHandler implements ResponseHandlerInterface
         if (json_last_error() !== JSON_ERROR_NONE) {
             throw new ApiException(
                 'Failed to decode JSON response: ' . json_last_error_msg(),
+                500,
+                null,
+                [],
+                $response->getStatusCode(),
+                null,
                 ['raw_body' => $body]
             );
         }
@@ -156,6 +177,11 @@ class ResponseHandler implements ResponseHandlerInterface
         if (!empty($missingFields)) {
             throw new ApiException(
                 'API response missing required fields',
+                400,
+                null,
+                [],
+                null,
+                null,
                 ['missing_fields' => $missingFields]
             );
         }

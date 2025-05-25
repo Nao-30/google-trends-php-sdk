@@ -1,6 +1,6 @@
 <?php
 
-namespace GtrendsSdk\Contracts;
+namespace Gtrends\Sdk\Contracts;
 
 /**
  * Interface ConfigurationInterface
@@ -8,7 +8,7 @@ namespace GtrendsSdk\Contracts;
  * Defines the contract for configuration management in the Google Trends PHP SDK.
  * This interface outlines methods for getting, setting, and validating configuration values.
  *
- * @package GtrendsSdk\Contracts
+ * @package Gtrends\Sdk\Contracts
  */
 interface ConfigurationInterface
 {
@@ -28,7 +28,7 @@ interface ConfigurationInterface
      * @param mixed $value The configuration value
      * @return self
      * 
-     * @throws \GtrendsSdk\Exceptions\ConfigurationException When the key or value is invalid
+     * @throws \Gtrends\Sdk\Exceptions\ConfigurationException When the key or value is invalid
      */
     public function set(string $key, $value): self;
     
@@ -53,7 +53,7 @@ interface ConfigurationInterface
      * @param array $config Configuration array
      * @return self
      * 
-     * @throws \GtrendsSdk\Exceptions\ConfigurationException When the configuration is invalid
+     * @throws \Gtrends\Sdk\Exceptions\ConfigurationException When the configuration is invalid
      */
     public function load(array $config): self;
     
@@ -70,7 +70,7 @@ interface ConfigurationInterface
      *
      * @return bool True if the configuration is valid, false otherwise
      * 
-     * @throws \GtrendsSdk\Exceptions\ConfigurationException When the configuration is invalid
+     * @throws \Gtrends\Sdk\Exceptions\ConfigurationException When the configuration is invalid
      */
     public function validate(): bool;
     
@@ -108,4 +108,19 @@ interface ConfigurationInterface
      * @return bool True if debug mode is enabled, false otherwise
      */
     public function isDebugEnabled(): bool;
+    
+    /**
+     * Set whether to make real HTTP requests or not.
+     *
+     * @param bool $enable Whether to enable real HTTP requests
+     * @return self
+     */
+    public function setMakeRealRequests(bool $enable): self;
+    
+    /**
+     * Check if real HTTP requests are enabled.
+     *
+     * @return bool True if real HTTP requests are enabled
+     */
+    public function shouldMakeRealRequests(): bool;
 } 

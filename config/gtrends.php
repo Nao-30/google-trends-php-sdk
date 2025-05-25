@@ -40,7 +40,7 @@ return [
     |
     */
     'headers' => [
-        'User-Agent' => 'GtrendsSdk/1.0',
+        'User-Agent' => 'Gtrends/Sdk/1.0',
         'Accept' => 'application/json',
     ],
 
