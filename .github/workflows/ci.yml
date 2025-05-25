@@ -56,6 +56,46 @@ jobs:
           file: ./coverage.xml
           fail_ci_if_error: false
 
+  laravel-tests:
+    name: Laravel ${{ matrix.laravel-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version: ['8.0']
+        laravel-version: ['8.*', '9.*']
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: mbstring, xml, ctype, iconv, json, pdo, curl
+          coverage: none
+          tools: composer:v2
+
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}-${{ matrix.laravel-version }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install dependencies
+        run: |
+          composer require "laravel/framework:${{ matrix.laravel-version }}" --no-interaction --no-update
+          composer update --prefer-dist --no-progress
+
+      - name: Run Laravel tests
+        run: vendor/bin/phpunit tests/Laravel
+
   lint:
     name: Lint
     runs-on: ubuntu-latest
