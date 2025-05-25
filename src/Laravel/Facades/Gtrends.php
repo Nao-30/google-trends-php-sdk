@@ -27,4 +27,4 @@ class Gtrends extends Facade
     {
         return 'gtrends';
     }
-} 
+}

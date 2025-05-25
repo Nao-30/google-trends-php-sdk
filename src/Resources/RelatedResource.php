@@ -76,7 +76,7 @@ class RelatedResource
      * @param string $timeframe Time range for data (e.g., 'today 3-m', 'today 12-m')
      * @param string $category Category ID to filter results
      * @return array Related topics data
-     * 
+     *
      * @throws ValidationException When the parameters are invalid
      * @throws \GtrendsSdk\Exceptions\ApiException When the API returns an error
      * @throws \GtrendsSdk\Exceptions\NetworkException When a network error occurs
@@ -90,7 +90,7 @@ class RelatedResource
                 ['parameter' => 'topic', 'value' => $topic]
             );
         }
-        
+
         // Validate region parameter if provided
         if ($region !== null && !preg_match('/^[A-Z]{2}$/', $region)) {
             throw new ValidationException(
@@ -98,29 +98,29 @@ class RelatedResource
                 ['parameter' => 'region', 'value' => $region]
             );
         }
-        
+
         $params = [
             'q' => $topic,
             'time' => $timeframe,
             'cat' => $category,
         ];
-        
+
         if ($region !== null) {
             $params['geo'] = $region;
         }
-        
+
         $this->logger->debug('Getting related topics', [
             'topic' => $topic,
             'region' => $region,
             'timeframe' => $timeframe,
             'category' => $category,
         ]);
-        
+
         $request = $this->requestBuilder->createGetRequest('related-topics', $params);
         $response = $this->httpClient->sendRequest($request);
-        
+
         $data = $this->responseHandler->processResponse($response);
-        
+
         return $this->formatRelatedResponse($data, 'topics');
     }
 
@@ -132,7 +132,7 @@ class RelatedResource
      * @param string $timeframe Time range for data (e.g., 'today 3-m', 'today 12-m')
      * @param string $category Category ID to filter results
      * @return array Related queries data
-     * 
+     *
      * @throws ValidationException When the parameters are invalid
      * @throws \GtrendsSdk\Exceptions\ApiException When the API returns an error
      * @throws \GtrendsSdk\Exceptions\NetworkException When a network error occurs
@@ -146,7 +146,7 @@ class RelatedResource
                 ['parameter' => 'topic', 'value' => $topic]
             );
         }
-        
+
         // Validate region parameter if provided
         if ($region !== null && !preg_match('/^[A-Z]{2}$/', $region)) {
             throw new ValidationException(
@@ -154,32 +154,32 @@ class RelatedResource
                 ['parameter' => 'region', 'value' => $region]
             );
         }
-        
+
         $params = [
             'q' => $topic,
             'time' => $timeframe,
             'cat' => $category,
         ];
-        
+
         if ($region !== null) {
             $params['geo'] = $region;
         }
-        
+
         $this->logger->debug('Getting related queries', [
             'topic' => $topic,
             'region' => $region,
             'timeframe' => $timeframe,
             'category' => $category,
         ]);
-        
+
         $request = $this->requestBuilder->createGetRequest('related-queries', $params);
         $response = $this->httpClient->sendRequest($request);
-        
+
         $data = $this->responseHandler->processResponse($response);
-        
+
         return $this->formatRelatedResponse($data, 'queries');
     }
-    
+
     /**
      * Format the related topics/queries response data into a consistent structure.
      *
@@ -190,12 +190,12 @@ class RelatedResource
     protected function formatRelatedResponse(array $data, string $type): array
     {
         $responseKey = $type === 'topics' ? 'related_topics' : 'related_queries';
-        
+
         // If the response already has the expected format, return it as is
         if (isset($data[$responseKey]) && is_array($data[$responseKey])) {
             return $data;
         }
-        
+
         // Construct a standardized response format
         $formatted = [
             $responseKey => [],
@@ -203,7 +203,7 @@ class RelatedResource
             'query' => $data['query'] ?? null,
             'region' => $data['region'] ?? null,
         ];
-        
+
         // Handle different possible response structures
         if (isset($data['items']) && is_array($data['items'])) {
             $formatted[$responseKey] = $data['items'];
@@ -219,7 +219,7 @@ class RelatedResource
             // If we can't determine the structure, use the raw data
             $formatted[$responseKey] = $data;
         }
-        
+
         return $formatted;
     }
-} 
+}

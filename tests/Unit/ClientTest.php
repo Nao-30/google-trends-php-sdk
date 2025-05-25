@@ -49,7 +49,7 @@ class ClientTest extends TestCase
 
     /**
      * Create a client with mock dependencies
-     * 
+     *
      * @return Client
      */
     private function createClientWithMocks(): Client
@@ -59,13 +59,13 @@ class ClientTest extends TestCase
             $this->requestBuilder,
             $this->responseHandler
         );
-        
+
         // Inject HTTP client mock
         $reflection = new \ReflectionClass(Client::class);
         $httpClientProperty = $reflection->getProperty('httpClient');
         $httpClientProperty->setAccessible(true);
         $httpClientProperty->setValue($client, $this->httpClient);
-        
+
         return $client;
     }
 
@@ -86,7 +86,7 @@ class ClientTest extends TestCase
         $fixtureData = $this->loadFixture('trending_success');
         $responseArray = json_decode($fixtureData, true);
         $response = new Response(200, ['Content-Type' => 'application/json'], $fixtureData);
-        
+
         $this->requestBuilder->expects($this->once())
             ->method('createGetRequest')
             ->with(
@@ -96,20 +96,20 @@ class ClientTest extends TestCase
                 })
             )
             ->willReturn(new \GuzzleHttp\Psr7\Request('GET', 'http://localhost:3000/api/trending'));
-        
+
         $this->httpClient->expects($this->once())
             ->method('sendRequest')
             ->willReturn($response);
-        
+
         $this->responseHandler->expects($this->once())
             ->method('processResponse')
             ->with($this->equalTo($response))
             ->willReturn($responseArray);
-        
+
         $client = $this->createClientWithMocks();
-        
+
         $result = $client->trending('US');
-        
+
         $this->assertIsArray($result);
         $this->assertEquals('success', $result['status']);
     }
@@ -120,9 +120,9 @@ class ClientTest extends TestCase
         $this->requestBuilder->expects($this->once())
             ->method('createGetRequest')
             ->willThrowException(new ValidationException('Missing required parameter: region'));
-        
+
         $client = $this->createClientWithMocks();
-        
+
         $this->expectException(ValidationException::class);
         $client->trending();
     }
@@ -132,7 +132,7 @@ class ClientTest extends TestCase
     {
         $mockResponse = ['status' => 'success', 'data' => ['topics' => []]];
         $response = new Response(200, ['Content-Type' => 'application/json'], json_encode($mockResponse));
-        
+
         $this->requestBuilder->expects($this->once())
             ->method('createGetRequest')
             ->with(
@@ -142,19 +142,19 @@ class ClientTest extends TestCase
                 })
             )
             ->willReturn(new \GuzzleHttp\Psr7\Request('GET', 'http://localhost:3000/api/related-topics'));
-        
+
         $this->httpClient->expects($this->once())
             ->method('sendRequest')
             ->willReturn($response);
-        
+
         $this->responseHandler->expects($this->once())
             ->method('processResponse')
             ->willReturn($mockResponse);
-        
+
         $client = $this->createClientWithMocks();
-        
+
         $result = $client->relatedTopics('php');
-        
+
         $this->assertIsArray($result);
         $this->assertEquals('success', $result['status']);
     }
@@ -164,7 +164,7 @@ class ClientTest extends TestCase
     {
         $mockResponse = ['status' => 'success', 'data' => ['queries' => []]];
         $response = new Response(200, ['Content-Type' => 'application/json'], json_encode($mockResponse));
-        
+
         $this->requestBuilder->expects($this->once())
             ->method('createGetRequest')
             ->with(
@@ -174,19 +174,19 @@ class ClientTest extends TestCase
                 })
             )
             ->willReturn(new \GuzzleHttp\Psr7\Request('GET', 'http://localhost:3000/api/related-queries'));
-        
+
         $this->httpClient->expects($this->once())
             ->method('sendRequest')
             ->willReturn($response);
-        
+
         $this->responseHandler->expects($this->once())
             ->method('processResponse')
             ->willReturn($mockResponse);
-        
+
         $client = $this->createClientWithMocks();
-        
+
         $result = $client->relatedQueries('php');
-        
+
         $this->assertIsArray($result);
         $this->assertEquals('success', $result['status']);
     }
@@ -196,7 +196,7 @@ class ClientTest extends TestCase
     {
         $mockResponse = ['status' => 'success', 'data' => ['comparison' => []]];
         $response = new Response(200, ['Content-Type' => 'application/json'], json_encode($mockResponse));
-        
+
         $this->requestBuilder->expects($this->once())
             ->method('createGetRequest')
             ->with(
@@ -206,20 +206,20 @@ class ClientTest extends TestCase
                 })
             )
             ->willReturn(new \GuzzleHttp\Psr7\Request('GET', 'http://localhost:3000/api/comparison'));
-        
+
         $this->httpClient->expects($this->once())
             ->method('sendRequest')
             ->willReturn($response);
-        
+
         $this->responseHandler->expects($this->once())
             ->method('processResponse')
             ->willReturn($mockResponse);
-        
+
         $client = $this->createClientWithMocks();
-        
+
         $result = $client->compare(['php', 'javascript']);
-        
+
         $this->assertIsArray($result);
         $this->assertEquals('success', $result['status']);
     }
-} 
+}

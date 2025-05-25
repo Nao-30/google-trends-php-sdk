@@ -17,7 +17,8 @@ class GtrendsServiceProvider extends ServiceProvider
     {
         // Merge configuration
         $this->mergeConfigFrom(
-            __DIR__ . '/config/gtrends.php', 'gtrends'
+            __DIR__ . '/config/gtrends.php',
+            'gtrends'
         );
 
         // Register Client as singleton
@@ -52,4 +53,4 @@ class GtrendsServiceProvider extends ServiceProvider
     {
         return [Client::class, 'gtrends'];
     }
-} 
+}

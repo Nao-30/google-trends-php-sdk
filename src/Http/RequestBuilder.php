@@ -11,9 +11,7 @@ use Psr\Http\Message\RequestInterface;
 
 /**
  * Class RequestBuilder
- * 
  * Implements the RequestBuilderInterface for building HTTP requests to the Google Trends API.
- * 
  * @package Gtrends\Sdk\Http
  */
 class RequestBuilder implements RequestBuilderInterface
@@ -34,7 +32,6 @@ class RequestBuilder implements RequestBuilderInterface
 
     /**
      * RequestBuilder constructor.
-     * 
      * @param ConfigurationInterface $config The SDK configuration
      */
     public function __construct(ConfigurationInterface $config)
@@ -48,13 +45,13 @@ class RequestBuilder implements RequestBuilderInterface
     public function createGetRequest(string $endpoint, array $queryParams = [], array $headers = []): RequestInterface
     {
         $url = $this->buildUrl($endpoint);
-        
+
         if (!empty($queryParams)) {
             $url = $this->addQueryParams($url, $queryParams);
         }
-        
+
         $mergedHeaders = $this->mergeHeaders($headers);
-        
+
         return new Request('GET', $url, $mergedHeaders);
     }
 
@@ -66,11 +63,11 @@ class RequestBuilder implements RequestBuilderInterface
         $url = $this->buildUrl($endpoint);
         $mergedHeaders = $this->mergeHeaders($headers);
         $body = json_encode($data, JSON_UNESCAPED_SLASHES);
-        
+
         if ($body === false) {
             throw new ValidationException('Failed to encode request data as JSON');
         }
-        
+
         return new Request('POST', $url, $mergedHeaders, $body);
     }
 
@@ -81,7 +78,7 @@ class RequestBuilder implements RequestBuilderInterface
     {
         $baseUrl = rtrim($this->config->getApiBaseUrl(), '/');
         $endpoint = ltrim($endpoint, '/');
-        
+
         return "{$baseUrl}/{$endpoint}";
     }
 
@@ -91,13 +88,13 @@ class RequestBuilder implements RequestBuilderInterface
     public function addQueryParams(string $url, array $params): string
     {
         $query = http_build_query($params);
-        
+
         if (empty($query)) {
             return $url;
         }
-        
+
         $separator = (strpos($url, '?') !== false) ? '&' : '?';
-        
+
         return "{$url}{$separator}{$query}";
     }
 
@@ -108,16 +105,16 @@ class RequestBuilder implements RequestBuilderInterface
     {
         // Add API key to headers if configured
         $mergedHeaders = $this->defaultHeaders;
-        
+
         if ($this->config->getApiKey()) {
             $mergedHeaders['X-API-Key'] = $this->config->getApiKey();
         }
-        
+
         // Merge custom headers
         foreach ($headers as $name => $value) {
             $mergedHeaders[$name] = $value;
         }
-        
+
         return $mergedHeaders;
     }
 
@@ -127,19 +124,19 @@ class RequestBuilder implements RequestBuilderInterface
     public function validateParams(array $params, array $rules): bool
     {
         $errors = [];
-        
+
         foreach ($rules as $param => $rule) {
             // Check required parameters
             if (strpos($rule, 'required') !== false && !isset($params[$param])) {
                 $errors[] = "The parameter '{$param}' is required";
                 continue;
             }
-            
+
             // Skip validation for optional params that aren't present
             if (!isset($params[$param])) {
                 continue;
             }
-            
+
             // Validate parameter type
             if (strpos($rule, 'string') !== false && !is_string($params[$param])) {
                 $errors[] = "The parameter '{$param}' must be a string";
@@ -150,7 +147,7 @@ class RequestBuilder implements RequestBuilderInterface
             } elseif (strpos($rule, 'boolean') !== false && !is_bool($params[$param])) {
                 $errors[] = "The parameter '{$param}' must be a boolean";
             }
-            
+
             // Validate enum values
             if (strpos($rule, 'in:') !== false) {
                 preg_match('/in:([^|]+)/', $rule, $matches);
@@ -162,16 +159,16 @@ class RequestBuilder implements RequestBuilderInterface
                 }
             }
         }
-        
+
         if (!empty($errors)) {
             throw new ValidationException(
-                'Validation failed for request parameters', 
+                'Validation failed for request parameters',
                 400,
                 null,
                 ['errors' => $errors]
             );
         }
-        
+
         return true;
     }
 
@@ -191,4 +188,4 @@ class RequestBuilder implements RequestBuilderInterface
         $this->config = $config;
         return $this;
     }
-} 
+}

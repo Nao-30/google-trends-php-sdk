@@ -6,7 +6,7 @@ use Exception;
 
 /**
  * Base exception class for all Google Trends SDK exceptions.
- * 
+ *
  * This class serves as the foundation for all SDK-specific exceptions,
  * providing common functionality and context information methods.
  */
@@ -80,12 +80,12 @@ class GtrendsException extends Exception
     public function __toString(): string
     {
         $baseString = parent::__toString();
-        
+
         if (empty($this->context)) {
             return $baseString;
         }
-        
+
         $contextString = json_encode($this->context, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
         return $baseString . PHP_EOL . 'Context: ' . $contextString;
     }
-} 
+}

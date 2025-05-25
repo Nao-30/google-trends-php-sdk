@@ -74,4 +74,4 @@ return [
     |
     */
     'debug' => env('GTRENDS_DEBUG', false),
-]; 
+];

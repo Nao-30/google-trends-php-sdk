@@ -62,12 +62,12 @@ class FacadeTest extends TestCase
             ->once()
             ->with(['region' => 'US'])
             ->andReturn(['status' => 'success', 'data' => []]);
-        
+
         $this->app->instance(Client::class, $mock);
-        
+
         // Call facade method
         $result = Gtrends::getTrending(['region' => 'US']);
-        
+
         // Verify result
         $this->assertEquals(['status' => 'success', 'data' => []], $result);
     }
@@ -77,32 +77,32 @@ class FacadeTest extends TestCase
     {
         // Mock the client
         $mock = $this->mock(Client::class);
-        
+
         $mock->shouldReceive('getRelatedTopics')
             ->once()
             ->with(['keyword' => 'php'])
             ->andReturn(['status' => 'success']);
-            
+
         $mock->shouldReceive('getRelatedQueries')
             ->once()
             ->with(['keyword' => 'php'])
             ->andReturn(['status' => 'success']);
-            
+
         $mock->shouldReceive('getComparison')
             ->once()
             ->with(['topics' => ['php', 'javascript']])
             ->andReturn(['status' => 'success']);
-        
+
         $this->app->instance(Client::class, $mock);
-        
+
         // Call facade methods
         $result1 = Gtrends::getRelatedTopics(['keyword' => 'php']);
         $result2 = Gtrends::getRelatedQueries(['keyword' => 'php']);
         $result3 = Gtrends::getComparison(['topics' => ['php', 'javascript']]);
-        
+
         // Verify results
         $this->assertEquals(['status' => 'success'], $result1);
         $this->assertEquals(['status' => 'success'], $result2);
         $this->assertEquals(['status' => 'success'], $result3);
     }
-} 
+}

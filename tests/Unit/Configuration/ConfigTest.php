@@ -58,11 +58,11 @@ class ConfigTest extends TestCase
         $reflection = new \ReflectionClass(Config::class);
         $property = $reflection->getProperty('config');
         $property->setAccessible(true);
-        
+
         $configData = $property->getValue($config);
         unset($configData['base_uri']);
         $property->setValue($config, $configData);
-        
+
         // Now validate
         $config->validate();
     }
@@ -110,4 +110,4 @@ class ConfigTest extends TestCase
         $config->set('retry.max_attempts', 4);
         $this->assertEquals(4, $config->get('retry.max_attempts'));
     }
-} 
+}

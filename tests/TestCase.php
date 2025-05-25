@@ -32,11 +32,11 @@ class TestCase extends BaseTestCase
     {
         $mock = new MockHandler($responses);
         $handlerStack = HandlerStack::create($mock);
-        
+
         // Add history middleware
         $history = Middleware::history($this->historyContainer);
         $handlerStack->push($history);
-        
+
         return new GuzzleClient(['handler' => $handlerStack]);
     }
 
@@ -49,11 +49,11 @@ class TestCase extends BaseTestCase
     protected function loadFixture(string $name): ?string
     {
         $path = __DIR__ . '/fixtures/' . $name . '.json';
-        
+
         if (file_exists($path)) {
             return file_get_contents($path);
         }
-        
+
         return null;
     }
 
@@ -84,7 +84,7 @@ class TestCase extends BaseTestCase
             'retry_attempts' => 3,
             'retry_delay' => 1,
         ];
-        
+
         return new Config(array_merge($defaults, $overrides));
     }
-} 
+}

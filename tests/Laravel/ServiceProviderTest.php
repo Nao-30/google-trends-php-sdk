@@ -38,7 +38,7 @@ class ServiceProviderTest extends TestCase
     {
         $client1 = $this->app->make(Client::class);
         $client2 = $this->app->make(Client::class);
-        
+
         $this->assertInstanceOf(Client::class, $client1);
         $this->assertSame($client1, $client2);
     }
@@ -47,10 +47,10 @@ class ServiceProviderTest extends TestCase
     public function it_loads_config_from_laravel_config()
     {
         $client = $this->app->make(Client::class);
-        
+
         // Get config from client
         $config = $this->getClientConfig($client);
-        
+
         // Verify config values
         $this->assertEquals('https://test-api.example.com', $config->get('api_base_uri'));
         $this->assertEquals(15, $config->get('api_timeout'));
@@ -63,7 +63,7 @@ class ServiceProviderTest extends TestCase
             '--provider' => GtrendsServiceProvider::class,
             '--tag' => 'config'
         ])->assertExitCode(0);
-        
+
         $this->assertFileExists(config_path('gtrends.php'));
     }
 
@@ -78,7 +78,7 @@ class ServiceProviderTest extends TestCase
         $reflection = new \ReflectionClass($client);
         $property = $reflection->getProperty('config');
         $property->setAccessible(true);
-        
+
         return $property->getValue($client);
     }
-} 
+}

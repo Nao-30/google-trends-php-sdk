@@ -29,7 +29,7 @@ class ApiWorkflowTest extends TestCase
     protected function createMockHttpClient(array $responses): MockObject
     {
         $mockHttpClient = $this->createMock(HttpClient::class);
-        
+
         // Configure the mock to return predetermined responses
         $mockHttpClient->method('sendRequest')
             ->willReturnCallback(function (RequestInterface $request) use (&$responses) {
@@ -38,7 +38,7 @@ class ApiWorkflowTest extends TestCase
                 }
                 return array_shift($responses);
             });
-            
+
         return $mockHttpClient;
     }
 
@@ -52,22 +52,22 @@ class ApiWorkflowTest extends TestCase
     {
         // Create test config
         $config = $this->createConfig(['base_uri' => 'http://localhost:3000/api/']);
-        
+
         $requestBuilder = new RequestBuilder($config);
         $responseHandler = new ResponseHandler($config);
-        
+
         // Create mock HttpClient
         $mockHttpClient = $this->createMockHttpClient($mockResponses);
-        
+
         // Create the SDK client
         $client = new Client($config, $requestBuilder, $responseHandler);
-        
+
         // Replace the HttpClient with our mock
         $clientReflection = new \ReflectionClass(Client::class);
         $httpClientProperty = $clientReflection->getProperty('httpClient');
         $httpClientProperty->setAccessible(true);
         $httpClientProperty->setValue($client, $mockHttpClient);
-        
+
         return $client;
     }
 
@@ -76,18 +76,18 @@ class ApiWorkflowTest extends TestCase
     {
         // Create fixture data
         $trendingData = $this->loadFixture('trending_success');
-        
+
         // Create mock responses
         $mockResponses = [
             new Response(200, ['Content-Type' => 'application/json'], $trendingData),
         ];
-        
+
         // Setup client with mocks
         $client = $this->setupClientWithMocks($mockResponses);
-        
+
         // Execute workflow
         $result = $client->trending('US');
-        
+
         // Verify results
         $this->assertIsArray($result);
         $this->assertEquals('success', $result['status']);
@@ -95,7 +95,7 @@ class ApiWorkflowTest extends TestCase
         $this->assertArrayHasKey('trends', $result['data']);
         $this->assertCount(3, $result['data']['trends']);
     }
-    
+
     /** @test */
     public function it_performs_complete_related_topics_workflow()
     {
@@ -114,18 +114,18 @@ class ApiWorkflowTest extends TestCase
                 ]
             ]
         ];
-        
+
         // Create mock responses
         $mockResponses = [
             new Response(200, ['Content-Type' => 'application/json'], json_encode($mockData)),
         ];
-        
+
         // Setup client with mocks
         $client = $this->setupClientWithMocks($mockResponses);
-        
+
         // Execute workflow
         $result = $client->relatedTopics('php');
-        
+
         // Verify results
         $this->assertIsArray($result);
         $this->assertEquals('success', $result['status']);
@@ -134,7 +134,7 @@ class ApiWorkflowTest extends TestCase
         $this->assertCount(3, $result['data']['topics']);
         $this->assertEquals('php', $result['data']['meta']['keyword']);
     }
-    
+
     /** @test */
     public function it_handles_error_responses_appropriately()
     {
@@ -150,21 +150,21 @@ class ApiWorkflowTest extends TestCase
                 ]
             ]
         ]);
-        
+
         // Create mock responses
         $mockResponses = [
             new Response(400, ['Content-Type' => 'application/json'], $errorData),
         ];
-        
+
         // Setup client with mocks
         $client = $this->setupClientWithMocks($mockResponses);
-        
+
         // Execute workflow and expect exception
         $this->expectException(ApiException::class);
         $this->expectExceptionMessage('API request failed');
         $client->trending('INVALID');
     }
-    
+
     /** @test */
     public function it_performs_complete_comparison_workflow()
     {
@@ -182,18 +182,18 @@ class ApiWorkflowTest extends TestCase
                 ]
             ]
         ];
-        
+
         // Create mock responses
         $mockResponses = [
             new Response(200, ['Content-Type' => 'application/json'], json_encode($mockData)),
         ];
-        
+
         // Setup client with mocks
         $client = $this->setupClientWithMocks($mockResponses);
-        
+
         // Execute workflow
         $result = $client->compare(['php', 'javascript']);
-        
+
         // Verify results
         $this->assertIsArray($result);
         $this->assertEquals('success', $result['status']);
@@ -203,4 +203,4 @@ class ApiWorkflowTest extends TestCase
         $this->assertEquals('php', $result['data']['comparison'][0]['term']);
         $this->assertEquals('javascript', $result['data']['comparison'][1]['term']);
     }
-} 
+}

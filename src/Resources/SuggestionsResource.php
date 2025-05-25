@@ -75,7 +75,7 @@ class SuggestionsResource
      * @param string|null $region Two-letter country code (e.g., US, GB, AE)
      * @param string $contentType Type of content suggestions to return
      * @return array Suggestions data
-     * 
+     *
      * @throws ValidationException When the parameters are invalid
      * @throws \GtrendsSdk\Exceptions\ApiException When the API returns an error
      * @throws \GtrendsSdk\Exceptions\NetworkException When a network error occurs
@@ -89,7 +89,7 @@ class SuggestionsResource
                 ['parameter' => 'query', 'value' => $query]
             );
         }
-        
+
         // Validate region parameter if provided
         if ($region !== null && !preg_match('/^[A-Z]{2}$/', $region)) {
             throw new ValidationException(
@@ -97,7 +97,7 @@ class SuggestionsResource
                 ['parameter' => 'region', 'value' => $region]
             );
         }
-        
+
         // Validate content type
         $validContentTypes = ['all', 'article', 'video', 'image', 'social'];
         if (!in_array($contentType, $validContentTypes)) {
@@ -106,30 +106,30 @@ class SuggestionsResource
                 ['parameter' => 'contentType', 'value' => $contentType]
             );
         }
-        
+
         $params = [
             'q' => $query,
             'type' => $contentType,
         ];
-        
+
         if ($region !== null) {
             $params['geo'] = $region;
         }
-        
+
         $this->logger->debug('Getting content suggestions', [
             'query' => $query,
             'region' => $region,
             'contentType' => $contentType,
         ]);
-        
+
         $request = $this->requestBuilder->createGetRequest('suggestions', $params);
         $response = $this->httpClient->sendRequest($request);
-        
+
         $data = $this->responseHandler->processResponse($response);
-        
+
         return $this->formatSuggestionsResponse($data);
     }
-    
+
     /**
      * Format the suggestions response data into a consistent structure.
      *
@@ -142,7 +142,7 @@ class SuggestionsResource
         if (isset($data['suggestions']) && is_array($data['suggestions'])) {
             return $data;
         }
-        
+
         // Construct a standardized response format
         $formatted = [
             'suggestions' => [],
@@ -151,7 +151,7 @@ class SuggestionsResource
             'region' => $data['region'] ?? null,
             'content_type' => $data['content_type'] ?? 'all',
         ];
-        
+
         // Handle different possible response structures
         if (isset($data['items']) && is_array($data['items'])) {
             $formatted['suggestions'] = $data['items'];
@@ -163,7 +163,7 @@ class SuggestionsResource
             // If we can't determine the structure, use the raw data
             $formatted['suggestions'] = $data;
         }
-        
+
         return $formatted;
     }
-} 
+}

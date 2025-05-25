@@ -175,10 +175,10 @@ class Config implements ConfigurationInterface
     public function load(array $config): self
     {
         $this->config = array_replace_recursive($this->config, $config);
-        
+
         // Validate the configuration
         $this->validate();
-        
+
         return $this;
     }
 
@@ -188,26 +188,26 @@ class Config implements ConfigurationInterface
     public function loadFromEnvironment(string $prefix = 'GTRENDS_'): self
     {
         $envConfig = [];
-        
+
         foreach ($_ENV as $key => $value) {
             // Check if this environment variable has our prefix
             if (strpos($key, $prefix) === 0) {
                 // Remove the prefix
                 $configKey = strtolower(str_replace($prefix, '', $key));
-                
+
                 // Convert to snake_case and handle nested keys
                 $configKey = str_replace('__', '.', $configKey);
-                
+
                 // Convert value types
                 $envConfig[$configKey] = $this->parseEnvironmentValue($value);
             }
         }
-        
+
         // Load the configuration values from environment
         if (!empty($envConfig)) {
             $this->load($envConfig);
         }
-        
+
         return $this;
     }
 
@@ -223,16 +223,16 @@ class Config implements ConfigurationInterface
         if (strtolower($value) === 'true') {
             return true;
         }
-        
+
         if (strtolower($value) === 'false') {
             return false;
         }
-        
+
         // Convert numeric strings to integers or floats
         if (is_numeric($value)) {
             return strpos($value, '.') !== false ? (float) $value : (int) $value;
         }
-        
+
         // Handle JSON data
         if (strpos($value, '{') === 0 || strpos($value, '[') === 0) {
             $decoded = json_decode($value, true);
@@ -240,7 +240,7 @@ class Config implements ConfigurationInterface
                 return $decoded;
             }
         }
-        
+
         // Default to string
         return $value;
     }
@@ -264,7 +264,7 @@ class Config implements ConfigurationInterface
                 );
             }
         }
-        
+
         // Validate all values according to rules
         foreach ($this->validationRules as $key => $rules) {
             if (isset($rules['required']) && $rules['required'] && !$this->has($key)) {
@@ -278,12 +278,12 @@ class Config implements ConfigurationInterface
                     'Required configuration value'
                 );
             }
-            
+
             if ($this->has($key)) {
                 $this->validateValue($key, $this->get($key));
             }
         }
-        
+
         return true;
     }
 
@@ -293,7 +293,7 @@ class Config implements ConfigurationInterface
      * @param string $key The configuration key
      * @param mixed $value The value to validate
      * @return bool True if valid
-     * 
+     *
      * @throws ConfigurationException When validation fails
      */
     protected function validateValue(string $key, $value): bool
@@ -302,35 +302,35 @@ class Config implements ConfigurationInterface
         if (!isset($this->validationRules[$key])) {
             return true;
         }
-        
+
         $rules = $this->validationRules[$key];
-        
+
         // Type validation
         if (isset($rules['type'])) {
             $valid = false;
-            
+
             switch ($rules['type']) {
                 case 'string':
                     $valid = is_string($value);
                     break;
-                    
+
                 case 'integer':
                     $valid = is_int($value);
                     break;
-                    
+
                 case 'float':
                     $valid = is_float($value) || is_int($value);
                     break;
-                    
+
                 case 'boolean':
                     $valid = is_bool($value);
                     break;
-                    
+
                 case 'array':
                     $valid = is_array($value);
                     break;
             }
-            
+
             if (!$valid) {
                 throw new ConfigurationException(
                     "Invalid type for configuration key {$key}: expected {$rules['type']}",
@@ -343,7 +343,7 @@ class Config implements ConfigurationInterface
                 );
             }
         }
-        
+
         // Min/max validation for numeric types
         if (is_numeric($value)) {
             if (isset($rules['min']) && $value < $rules['min']) {
@@ -357,7 +357,7 @@ class Config implements ConfigurationInterface
                     "Value >= {$rules['min']}"
                 );
             }
-            
+
             if (isset($rules['max']) && $value > $rules['max']) {
                 throw new ConfigurationException(
                     "Value for {$key} is too large: maximum is {$rules['max']}",
@@ -370,7 +370,7 @@ class Config implements ConfigurationInterface
                 );
             }
         }
-        
+
         return true;
     }
 
@@ -393,7 +393,7 @@ class Config implements ConfigurationInterface
     {
         return $this->get('retry.max_attempts', $this->defaults['retry']['max_attempts']);
     }
-    
+
     /**
      * Get the retry delay in milliseconds.
      *
@@ -403,7 +403,7 @@ class Config implements ConfigurationInterface
     {
         return $this->get('retry.delay', $this->defaults['retry']['delay']);
     }
-    
+
     /**
      * Get the retry delay multiplier.
      *
@@ -413,7 +413,7 @@ class Config implements ConfigurationInterface
     {
         return $this->get('retry.multiplier', $this->defaults['retry']['multiplier']);
     }
-    
+
     /**
      * Alias for getBaseUri to maintain compatibility.
      *
@@ -469,7 +469,7 @@ class Config implements ConfigurationInterface
     {
         return $this->get('api_key');
     }
-    
+
     /**
      * Check if debug mode is enabled.
      *
@@ -521,4 +521,4 @@ class Config implements ConfigurationInterface
     {
         return $this->makeRealRequests;
     }
-} 
+}

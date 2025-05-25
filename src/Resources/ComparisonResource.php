@@ -76,7 +76,7 @@ class ComparisonResource
      * @param string $timeframe Time range for data (e.g., 'today 3-m', 'today 12-m')
      * @param string $category Category ID to filter results
      * @return array Comparison data
-     * 
+     *
      * @throws ValidationException When the parameters are invalid
      * @throws \GtrendsSdk\Exceptions\ApiException When the API returns an error
      * @throws \GtrendsSdk\Exceptions\NetworkException When a network error occurs
@@ -90,14 +90,14 @@ class ComparisonResource
                 ['parameter' => 'topics', 'value' => $topics]
             );
         }
-        
+
         if (count($topics) > 5) {
             throw new ValidationException(
                 'Maximum of 5 topics can be compared',
                 ['parameter' => 'topics', 'value' => $topics]
             );
         }
-        
+
         // Check for empty topic strings
         foreach ($topics as $index => $topic) {
             if (empty($topic)) {
@@ -107,7 +107,7 @@ class ComparisonResource
                 );
             }
         }
-        
+
         // Validate region parameter if provided
         if ($region !== null && !preg_match('/^[A-Z]{2}$/', $region)) {
             throw new ValidationException(
@@ -115,32 +115,32 @@ class ComparisonResource
                 ['parameter' => 'region', 'value' => $region]
             );
         }
-        
+
         $params = [
             'q' => implode(',', $topics),
             'time' => $timeframe,
             'cat' => $category,
         ];
-        
+
         if ($region !== null) {
             $params['geo'] = $region;
         }
-        
+
         $this->logger->debug('Comparing topics', [
             'topics' => $topics,
             'region' => $region,
             'timeframe' => $timeframe,
             'category' => $category,
         ]);
-        
+
         $request = $this->requestBuilder->createGetRequest('comparison', $params);
         $response = $this->httpClient->sendRequest($request);
-        
+
         $data = $this->responseHandler->processResponse($response);
-        
+
         return $this->formatComparisonResponse($data, $topics);
     }
-    
+
     /**
      * Format the comparison response data into a consistent structure.
      *
@@ -154,7 +154,7 @@ class ComparisonResource
         if (isset($data['comparison']) && is_array($data['comparison'])) {
             return $data;
         }
-        
+
         // Construct a standardized response format
         $formatted = [
             'comparison' => [],
@@ -163,7 +163,7 @@ class ComparisonResource
             'region' => $data['region'] ?? null,
             'timeframe' => $data['timeframe'] ?? null,
         ];
-        
+
         // Handle different possible response structures
         if (isset($data['items']) && is_array($data['items'])) {
             $formatted['comparison'] = $data['items'];
@@ -175,7 +175,7 @@ class ComparisonResource
             // If we can't determine the structure, use the raw data
             $formatted['comparison'] = $data;
         }
-        
+
         return $formatted;
     }
-} 
+}

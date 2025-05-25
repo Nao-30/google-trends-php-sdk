@@ -4,7 +4,7 @@ namespace Gtrends\Sdk\Exceptions;
 
 /**
  * Exception thrown for API-related errors.
- * 
+ *
  * This exception is used when there are errors related to the API,
  * including HTTP errors and API-specific error responses.
  */
@@ -52,20 +52,20 @@ class ApiException extends GtrendsException
         ?array $responseData = null
     ) {
         parent::__construct($message, $code, $previous, $context);
-        
+
         $this->statusCode = $statusCode;
         $this->apiErrorCode = $apiErrorCode;
         $this->responseData = $responseData;
-        
+
         // Add API information to context
         if ($statusCode !== null) {
             $this->addContext('status_code', $statusCode);
         }
-        
+
         if ($apiErrorCode !== null) {
             $this->addContext('api_error_code', $apiErrorCode);
         }
-        
+
         if ($responseData !== null) {
             $this->addContext('response_data', $responseData);
         }
@@ -100,4 +100,4 @@ class ApiException extends GtrendsException
     {
         return $this->responseData;
     }
-} 
+}

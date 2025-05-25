@@ -75,7 +75,7 @@ class TrendingResource
      * @param int $limit Maximum number of results to return (1-100)
      * @param bool $includeNews Whether to include related news articles
      * @return array Trending search data
-     * 
+     *
      * @throws ValidationException When the parameters are invalid
      * @throws \GtrendsSdk\Exceptions\ApiException When the API returns an error
      * @throws \GtrendsSdk\Exceptions\NetworkException When a network error occurs
@@ -89,7 +89,7 @@ class TrendingResource
                 ['parameter' => 'limit', 'value' => $limit]
             );
         }
-        
+
         // Validate region parameter if provided
         if ($region !== null && !preg_match('/^[A-Z]{2}$/', $region)) {
             throw new ValidationException(
@@ -97,30 +97,30 @@ class TrendingResource
                 ['parameter' => 'region', 'value' => $region]
             );
         }
-        
+
         $params = [
             'limit' => $limit,
             'include_news' => $includeNews,
         ];
-        
+
         if ($region !== null) {
             $params['region'] = $region;
         }
-        
+
         $this->logger->debug('Getting trending searches', [
             'region' => $region,
             'limit' => $limit,
             'include_news' => $includeNews
         ]);
-        
+
         $request = $this->requestBuilder->createGetRequest('trending', $params);
         $response = $this->httpClient->sendRequest($request);
-        
+
         $data = $this->responseHandler->processResponse($response);
-        
+
         return $this->formatTrendingResponse($data);
     }
-    
+
     /**
      * Format the trending response data into a consistent structure.
      *
@@ -133,14 +133,14 @@ class TrendingResource
         if (isset($data['trends']) && is_array($data['trends'])) {
             return $data;
         }
-        
+
         // Construct a standardized response format
         $formatted = [
             'trends' => [],
             'timestamp' => $data['timestamp'] ?? time(),
             'region' => $data['region'] ?? null,
         ];
-        
+
         // Handle different possible response structures
         if (isset($data['items']) && is_array($data['items'])) {
             $formatted['trends'] = $data['items'];
@@ -152,7 +152,7 @@ class TrendingResource
             // If we can't determine the structure, use the raw data
             $formatted['trends'] = $data;
         }
-        
+
         return $formatted;
     }
-} 
+}

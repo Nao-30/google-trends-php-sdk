@@ -78,17 +78,17 @@ class GeoResource
      * @param string $category Category ID to filter results
      * @param int $count Number of regions to display
      * @return array Geographic interest data
-     * 
+     *
      * @throws ValidationException When the parameters are invalid
      * @throws \GtrendsSdk\Exceptions\ApiException When the API returns an error
      * @throws \GtrendsSdk\Exceptions\NetworkException When a network error occurs
      */
     public function getGeoInterest(
-        string $query, 
-        ?string $region = null, 
-        string $resolution = 'COUNTRY', 
-        string $timeframe = 'today 12-m', 
-        string $category = '0', 
+        string $query,
+        ?string $region = null,
+        string $resolution = 'COUNTRY',
+        string $timeframe = 'today 12-m',
+        string $category = '0',
         int $count = 20
     ): array {
         // Validate query parameter
@@ -98,7 +98,7 @@ class GeoResource
                 ['parameter' => 'query', 'value' => $query]
             );
         }
-        
+
         // Validate region parameter if provided
         if ($region !== null && !preg_match('/^[A-Z]{2}$/', $region)) {
             throw new ValidationException(
@@ -106,7 +106,7 @@ class GeoResource
                 ['parameter' => 'region', 'value' => $region]
             );
         }
-        
+
         // Validate resolution parameter
         $validResolutions = ['COUNTRY', 'REGION', 'CITY', 'DMA'];
         if (!in_array(strtoupper($resolution), $validResolutions)) {
@@ -115,7 +115,7 @@ class GeoResource
                 ['parameter' => 'resolution', 'value' => $resolution]
             );
         }
-        
+
         // Validate count parameter
         if ($count < 1 || $count > 100) {
             throw new ValidationException(
@@ -123,7 +123,7 @@ class GeoResource
                 ['parameter' => 'count', 'value' => $count]
             );
         }
-        
+
         $params = [
             'q' => $query,
             'resolution' => strtoupper($resolution),
@@ -131,11 +131,11 @@ class GeoResource
             'cat' => $category,
             'count' => $count,
         ];
-        
+
         if ($region !== null) {
             $params['geo'] = $region;
         }
-        
+
         $this->logger->debug('Getting geographic interest', [
             'query' => $query,
             'region' => $region,
@@ -144,15 +144,15 @@ class GeoResource
             'category' => $category,
             'count' => $count,
         ]);
-        
+
         $request = $this->requestBuilder->createGetRequest('geo', $params);
         $response = $this->httpClient->sendRequest($request);
-        
+
         $data = $this->responseHandler->processResponse($response);
-        
+
         return $this->formatGeoResponse($data);
     }
-    
+
     /**
      * Format the geographic interest response data into a consistent structure.
      *
@@ -165,7 +165,7 @@ class GeoResource
         if (isset($data['geo_interest']) && is_array($data['geo_interest'])) {
             return $data;
         }
-        
+
         // Construct a standardized response format
         $formatted = [
             'geo_interest' => [],
@@ -175,7 +175,7 @@ class GeoResource
             'resolution' => $data['resolution'] ?? null,
             'timeframe' => $data['timeframe'] ?? null,
         ];
-        
+
         // Handle different possible response structures
         if (isset($data['items']) && is_array($data['items'])) {
             $formatted['geo_interest'] = $data['items'];
@@ -189,7 +189,7 @@ class GeoResource
             // If we can't determine the structure, use the raw data
             $formatted['geo_interest'] = $data;
         }
-        
+
         return $formatted;
     }
-} 
+}

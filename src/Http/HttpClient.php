@@ -16,9 +16,9 @@ use Psr\Log\NullLogger;
 
 /**
  * Class HttpClient
- * 
+ *
  * Wrapper for GuzzleHttp client that handles retry logic, timeouts, and error handling.
- * 
+ *
  * @package Gtrends\Sdk\Http
  */
 class HttpClient
@@ -40,7 +40,7 @@ class HttpClient
 
     /**
      * HttpClient constructor.
-     * 
+     *
      * @param ConfigurationInterface $config The SDK configuration
      * @param LoggerInterface|null $logger The logger instance (optional)
      */
@@ -57,17 +57,17 @@ class HttpClient
     protected function initializeClient(): void
     {
         $stack = HandlerStack::create();
-        
+
         // Add retry middleware if retries are enabled
         if ($this->config->getMaxRetries() > 0) {
             $stack->push($this->createRetryMiddleware());
         }
-        
+
         // Add logging middleware if debug mode is enabled
         if ($this->config->isDebugMode()) {
             $stack->push($this->createLoggingMiddleware());
         }
-        
+
         $this->client = new GuzzleClient([
             'handler' => $stack,
             'timeout' => $this->config->getTimeout(),
@@ -79,7 +79,7 @@ class HttpClient
 
     /**
      * Create middleware for request retries.
-     * 
+     *
      * @return callable Retry middleware
      */
     protected function createRetryMiddleware(): callable
@@ -95,19 +95,19 @@ class HttpClient
                 if ($retries >= $this->config->getMaxRetries()) {
                     return false;
                 }
-                
+
                 // Retry on server errors (5xx)
                 if ($response && $response->getStatusCode() >= 500) {
                     $this->logRetry($retries, $request, $response, $exception);
                     return true;
                 }
-                
+
                 // Retry on connection errors
                 if ($exception instanceof GuzzleException) {
                     $this->logRetry($retries, $request, $response, $exception);
                     return true;
                 }
-                
+
                 return false;
             },
             function ($retries) {
@@ -121,7 +121,7 @@ class HttpClient
 
     /**
      * Create middleware for logging requests and responses.
-     * 
+     *
      * @return callable Logging middleware
      */
     protected function createLoggingMiddleware(): callable
@@ -148,7 +148,7 @@ class HttpClient
 
     /**
      * Log a retry attempt.
-     * 
+     *
      * @param int $retries Current retry count
      * @param RequestInterface $request The request
      * @param ResponseInterface|null $response The response (if available)
@@ -171,10 +171,10 @@ class HttpClient
 
     /**
      * Send a request and return the response.
-     * 
+     *
      * @param RequestInterface $request The request to send
      * @return ResponseInterface The response
-     * 
+     *
      * @throws NetworkException When a network error occurs
      */
     public function sendRequest(RequestInterface $request): ResponseInterface
@@ -183,14 +183,14 @@ class HttpClient
         if (!$this->config->shouldMakeRealRequests()) {
             throw new NetworkException(
                 'HTTP requests are disabled in test mode',
-                400, 
+                400,
                 null,
                 ['request_uri' => (string) $request->getUri()],
                 (string) $request->getUri(),
                 $request->getMethod()
             );
         }
-        
+
         try {
             return $this->client->send($request, [
                 'timeout' => $this->config->getTimeout(),
@@ -210,7 +210,7 @@ class HttpClient
 
     /**
      * Send a request asynchronously.
-     * 
+     *
      * @param RequestInterface $request The request to send
      * @return \GuzzleHttp\Promise\PromiseInterface The promise
      */
@@ -224,7 +224,7 @@ class HttpClient
 
     /**
      * Get the underlying Guzzle client.
-     * 
+     *
      * @return GuzzleClient The Guzzle client
      */
     public function getGuzzleClient(): GuzzleClient
@@ -234,7 +234,7 @@ class HttpClient
 
     /**
      * Get the configuration instance.
-     * 
+     *
      * @return ConfigurationInterface The configuration
      */
     public function getConfig(): ConfigurationInterface
@@ -244,7 +244,7 @@ class HttpClient
 
     /**
      * Set the configuration instance.
-     * 
+     *
      * @param ConfigurationInterface $config The configuration
      * @return self
      */
@@ -257,7 +257,7 @@ class HttpClient
 
     /**
      * Get the logger instance.
-     * 
+     *
      * @return LoggerInterface The logger
      */
     public function getLogger(): LoggerInterface
@@ -267,7 +267,7 @@ class HttpClient
 
     /**
      * Set the logger instance.
-     * 
+     *
      * @param LoggerInterface $logger The logger
      * @return self
      */
@@ -276,4 +276,4 @@ class HttpClient
         $this->logger = $logger;
         return $this;
     }
-} 
+}

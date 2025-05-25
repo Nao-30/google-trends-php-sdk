@@ -71,21 +71,21 @@ class HealthResource
      * Check the health of the Google Trends API.
      *
      * @return array Health check data
-     * 
+     *
      * @throws \GtrendsSdk\Exceptions\NetworkException When a network error occurs
      */
     public function checkHealth(): array
     {
         $this->logger->debug('Checking API health');
-        
+
         $request = $this->requestBuilder->createGetRequest('health');
         $response = $this->httpClient->sendRequest($request);
-        
+
         $data = $this->responseHandler->processResponse($response);
-        
+
         return $this->formatHealthResponse($data);
     }
-    
+
     /**
      * Format the health response data into a consistent structure.
      *
@@ -98,7 +98,7 @@ class HealthResource
         if (isset($data['status']) && (isset($data['message']) || isset($data['details']))) {
             return $data;
         }
-        
+
         // Construct a standardized response format
         $formatted = [
             'status' => 'unknown',
@@ -106,7 +106,7 @@ class HealthResource
             'timestamp' => $data['timestamp'] ?? time(),
             'details' => [],
         ];
-        
+
         // Extract status information
         if (isset($data['status'])) {
             $formatted['status'] = $data['status'];
@@ -115,14 +115,14 @@ class HealthResource
         } elseif (isset($data['is_healthy']) && is_bool($data['is_healthy'])) {
             $formatted['status'] = $data['is_healthy'] ? 'healthy' : 'unhealthy';
         }
-        
+
         // Extract message information
         if (isset($data['message'])) {
             $formatted['message'] = $data['message'];
         } elseif (isset($data['status_message'])) {
             $formatted['message'] = $data['status_message'];
         }
-        
+
         // Extract detailed information
         if (isset($data['details']) && is_array($data['details'])) {
             $formatted['details'] = $data['details'];
@@ -131,12 +131,12 @@ class HealthResource
         } elseif (isset($data['components']) && is_array($data['components'])) {
             $formatted['details'] = $data['components'];
         }
-        
+
         // Add additional information if available
         if (isset($data['version'])) {
             $formatted['version'] = $data['version'];
         }
-        
+
         return $formatted;
     }
-} 
+}

@@ -4,7 +4,7 @@ namespace Gtrends\Sdk\Exceptions;
 
 /**
  * Exception thrown for configuration-related errors.
- * 
+ *
  * This exception is used when there are issues with the SDK configuration,
  * such as missing required settings, invalid configuration values, etc.
  */
@@ -52,21 +52,21 @@ class ConfigurationException extends GtrendsException
         ?string $expectedValue = null
     ) {
         parent::__construct($message, $code, $previous, $context);
-        
+
         $this->configKey = $configKey;
         $this->invalidValue = $invalidValue;
         $this->expectedValue = $expectedValue;
-        
+
         // Add configuration information to context
         if ($configKey !== null) {
             $this->addContext('config_key', $configKey);
         }
-        
+
         if ($invalidValue !== null) {
             // Use var_export for a string representation of any value
             $this->addContext('invalid_value', var_export($invalidValue, true));
         }
-        
+
         if ($expectedValue !== null) {
             $this->addContext('expected_value', $expectedValue);
         }
@@ -101,4 +101,4 @@ class ConfigurationException extends GtrendsException
     {
         return $this->expectedValue;
     }
-} 
+}

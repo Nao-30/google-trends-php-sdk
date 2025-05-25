@@ -4,7 +4,7 @@ namespace Gtrends\Sdk\Exceptions;
 
 /**
  * Exception thrown for network connectivity issues.
- * 
+ *
  * This exception is used when there are problems with network connectivity,
  * such as connection timeouts, DNS resolution failures, etc.
  */
@@ -52,20 +52,20 @@ class NetworkException extends GtrendsException
         ?\Throwable $connectionException = null
     ) {
         parent::__construct($message, $code, $previous, $context);
-        
+
         $this->url = $url;
         $this->method = $method;
         $this->connectionException = $connectionException;
-        
+
         // Add network information to context
         if ($url !== null) {
             $this->addContext('url', $url);
         }
-        
+
         if ($method !== null) {
             $this->addContext('method', $method);
         }
-        
+
         if ($connectionException !== null) {
             $this->addContext('connection_exception', [
                 'class' => get_class($connectionException),
@@ -104,4 +104,4 @@ class NetworkException extends GtrendsException
     {
         return $this->connectionException;
     }
-} 
+}

@@ -81,17 +81,17 @@ class Client implements ClientInterface
         }
 
         $this->logger = $logger ?? new NullLogger();
-        
+
         // Initialize HTTP client
         $this->httpClient = new HttpClient($this->config, $this->logger);
-        
+
         // Initialize request builder and response handler with provided instances or create new ones
         $this->requestBuilder = $requestBuilder;
         if (!$this->requestBuilder) {
             // Assuming we have a RequestBuilder class in the Http namespace
             $this->requestBuilder = new Http\RequestBuilder($this->config);
         }
-        
+
         $this->responseHandler = $responseHandler;
         if (!$this->responseHandler) {
             // Assuming we have a ResponseHandler class in the Http namespace
@@ -105,19 +105,19 @@ class Client implements ClientInterface
     public function trending(?string $region = null, int $limit = 10, bool $includeNews = false): array
     {
         $this->validateLimit($limit, 1, 100);
-        
+
         $params = [
             'limit' => $limit,
             'include_news' => $includeNews,
         ];
-        
+
         if ($region !== null) {
             $params['region'] = $region;
         }
-        
+
         $request = $this->requestBuilder->createGetRequest('trending', $params);
         $response = $this->httpClient->sendRequest($request);
-        
+
         return $this->responseHandler->processResponse($response);
     }
 
@@ -131,14 +131,14 @@ class Client implements ClientInterface
             'time' => $timeframe,
             'cat' => $category,
         ];
-        
+
         if ($region !== null) {
             $params['geo'] = $region;
         }
-        
+
         $request = $this->requestBuilder->createGetRequest('related-topics', $params);
         $response = $this->httpClient->sendRequest($request);
-        
+
         return $this->responseHandler->processResponse($response);
     }
 
@@ -152,14 +152,14 @@ class Client implements ClientInterface
             'time' => $timeframe,
             'cat' => $category,
         ];
-        
+
         if ($region !== null) {
             $params['geo'] = $region;
         }
-        
+
         $request = $this->requestBuilder->createGetRequest('related-queries', $params);
         $response = $this->httpClient->sendRequest($request);
-        
+
         return $this->responseHandler->processResponse($response);
     }
 
@@ -171,24 +171,24 @@ class Client implements ClientInterface
         if (empty($topics)) {
             throw new ValidationException('At least one topic is required for comparison');
         }
-        
+
         if (count($topics) > 5) {
             throw new ValidationException('Maximum of 5 topics can be compared');
         }
-        
+
         $params = [
             'q' => implode(',', $topics),
             'time' => $timeframe,
             'cat' => $category,
         ];
-        
+
         if ($region !== null) {
             $params['geo'] = $region;
         }
-        
+
         $request = $this->requestBuilder->createGetRequest('comparison', $params);
         $response = $this->httpClient->sendRequest($request);
-        
+
         return $this->responseHandler->processResponse($response);
     }
 
@@ -201,14 +201,14 @@ class Client implements ClientInterface
             'q' => $query,
             'type' => $contentType,
         ];
-        
+
         if ($region !== null) {
             $params['geo'] = $region;
         }
-        
+
         $request = $this->requestBuilder->createGetRequest('suggestions', $params);
         $response = $this->httpClient->sendRequest($request);
-        
+
         return $this->responseHandler->processResponse($response);
     }
 
@@ -218,19 +218,19 @@ class Client implements ClientInterface
     public function opportunities(string $niche, ?string $region = null, int $count = 10): array
     {
         $this->validateLimit($count, 1, 100);
-        
+
         $params = [
             'niche' => $niche,
             'limit' => $count,
         ];
-        
+
         if ($region !== null) {
             $params['geo'] = $region;
         }
-        
+
         $request = $this->requestBuilder->createGetRequest('opportunities', $params);
         $response = $this->httpClient->sendRequest($request);
-        
+
         return $this->responseHandler->processResponse($response);
     }
 
@@ -243,10 +243,10 @@ class Client implements ClientInterface
             'q' => $query,
             'time' => $timeframe,
         ];
-        
+
         $request = $this->requestBuilder->createGetRequest('growth', $params);
         $response = $this->httpClient->sendRequest($request);
-        
+
         return $this->responseHandler->processResponse($response);
     }
 
@@ -256,7 +256,7 @@ class Client implements ClientInterface
     public function geo(string $query, ?string $region = null, string $resolution = 'COUNTRY', string $timeframe = 'today 12-m', string $category = '0', int $count = 20): array
     {
         $this->validateLimit($count, 1, 100);
-        
+
         $params = [
             'q' => $query,
             'resolution' => $resolution,
@@ -264,14 +264,14 @@ class Client implements ClientInterface
             'cat' => $category,
             'limit' => $count,
         ];
-        
+
         if ($region !== null) {
             $params['geo'] = $region;
         }
-        
+
         $request = $this->requestBuilder->createGetRequest('geo', $params);
         $response = $this->httpClient->sendRequest($request);
-        
+
         return $this->responseHandler->processResponse($response);
     }
 
@@ -282,7 +282,7 @@ class Client implements ClientInterface
     {
         $request = $this->requestBuilder->createGetRequest('health');
         $response = $this->httpClient->sendRequest($request);
-        
+
         return $this->responseHandler->processResponse($response);
     }
 
@@ -300,12 +300,12 @@ class Client implements ClientInterface
     public function setConfig(string $key, $value): self
     {
         $this->config->set($key, $value);
-        
+
         // Update config in dependencies
         $this->requestBuilder->setConfig($this->config);
         $this->responseHandler->setConfig($this->config);
         $this->httpClient->setConfig($this->config);
-        
+
         return $this;
     }
 
@@ -316,7 +316,7 @@ class Client implements ClientInterface
      * @param int $min The minimum allowed value
      * @param int $max The maximum allowed value
      * @return bool True if valid
-     * 
+     *
      * @throws ValidationException When the limit is outside the allowed range
      */
     protected function validateLimit(int $limit, int $min, int $max): bool
@@ -326,7 +326,7 @@ class Client implements ClientInterface
                 sprintf('Limit must be between %d and %d, %d given', $min, $max, $limit)
             );
         }
-        
+
         return true;
     }
-} 
+}

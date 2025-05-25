@@ -4,7 +4,7 @@ namespace Gtrends\Sdk\Exceptions;
 
 /**
  * Exception thrown for parameter validation errors.
- * 
+ *
  * This exception is used when there are validation errors with input parameters,
  * such as invalid data types, values out of range, etc.
  */
@@ -61,26 +61,26 @@ class ValidationException extends GtrendsException
         array $validationErrors = []
     ) {
         parent::__construct($message, $code, $previous, $context);
-        
+
         $this->parameterName = $parameterName;
         $this->invalidValue = $invalidValue;
         $this->expectedConstraint = $expectedConstraint;
         $this->validationErrors = $validationErrors;
-        
+
         // Add validation information to context
         if ($parameterName !== null) {
             $this->addContext('parameter_name', $parameterName);
         }
-        
+
         if ($invalidValue !== null) {
             // Use var_export for a string representation of any value
             $this->addContext('invalid_value', var_export($invalidValue, true));
         }
-        
+
         if ($expectedConstraint !== null) {
             $this->addContext('expected_constraint', $expectedConstraint);
         }
-        
+
         if (!empty($validationErrors)) {
             $this->addContext('validation_errors', $validationErrors);
         }
@@ -140,7 +140,7 @@ class ValidationException extends GtrendsException
             'value' => var_export($invalidValue, true),
             'constraint' => $constraint,
         ];
-        
+
         return $this;
     }
-} 
+}

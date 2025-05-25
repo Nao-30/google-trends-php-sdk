@@ -75,7 +75,7 @@ class OpportunitiesResource
      * @param string|null $region Two-letter country code (e.g., US, GB, AE)
      * @param int $count Number of opportunities to return
      * @return array Opportunities data
-     * 
+     *
      * @throws ValidationException When the parameters are invalid
      * @throws \GtrendsSdk\Exceptions\ApiException When the API returns an error
      * @throws \GtrendsSdk\Exceptions\NetworkException When a network error occurs
@@ -89,7 +89,7 @@ class OpportunitiesResource
                 ['parameter' => 'niche', 'value' => $niche]
             );
         }
-        
+
         // Validate region parameter if provided
         if ($region !== null && !preg_match('/^[A-Z]{2}$/', $region)) {
             throw new ValidationException(
@@ -97,7 +97,7 @@ class OpportunitiesResource
                 ['parameter' => 'region', 'value' => $region]
             );
         }
-        
+
         // Validate count parameter
         if ($count < 1 || $count > 50) {
             throw new ValidationException(
@@ -105,30 +105,30 @@ class OpportunitiesResource
                 ['parameter' => 'count', 'value' => $count]
             );
         }
-        
+
         $params = [
             'niche' => $niche,
             'count' => $count,
         ];
-        
+
         if ($region !== null) {
             $params['geo'] = $region;
         }
-        
+
         $this->logger->debug('Getting writing opportunities', [
             'niche' => $niche,
             'region' => $region,
             'count' => $count,
         ]);
-        
+
         $request = $this->requestBuilder->createGetRequest('opportunities', $params);
         $response = $this->httpClient->sendRequest($request);
-        
+
         $data = $this->responseHandler->processResponse($response);
-        
+
         return $this->formatOpportunitiesResponse($data);
     }
-    
+
     /**
      * Format the opportunities response data into a consistent structure.
      *
@@ -141,7 +141,7 @@ class OpportunitiesResource
         if (isset($data['opportunities']) && is_array($data['opportunities'])) {
             return $data;
         }
-        
+
         // Construct a standardized response format
         $formatted = [
             'opportunities' => [],
@@ -150,7 +150,7 @@ class OpportunitiesResource
             'region' => $data['region'] ?? null,
             'count' => $data['count'] ?? null,
         ];
-        
+
         // Handle different possible response structures
         if (isset($data['items']) && is_array($data['items'])) {
             $formatted['opportunities'] = $data['items'];
@@ -162,7 +162,7 @@ class OpportunitiesResource
             // If we can't determine the structure, use the raw data
             $formatted['opportunities'] = $data;
         }
-        
+
         return $formatted;
     }
-} 
+}

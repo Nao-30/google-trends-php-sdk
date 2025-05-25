@@ -74,7 +74,7 @@ class GrowthResource
      * @param string $query Search term to analyze growth for
      * @param string $timeframe Time range for data (e.g., 'today 12-m', 'today 5-y')
      * @return array Growth pattern data
-     * 
+     *
      * @throws ValidationException When the parameters are invalid
      * @throws \GtrendsSdk\Exceptions\ApiException When the API returns an error
      * @throws \GtrendsSdk\Exceptions\NetworkException When a network error occurs
@@ -88,7 +88,7 @@ class GrowthResource
                 ['parameter' => 'query', 'value' => $query]
             );
         }
-        
+
         // Validate timeframe format
         $validTimeframes = ['today 3-m', 'today 12-m', 'today 5-y', 'all'];
         if (!in_array($timeframe, $validTimeframes)) {
@@ -97,25 +97,25 @@ class GrowthResource
                 ['parameter' => 'timeframe', 'value' => $timeframe]
             );
         }
-        
+
         $params = [
             'q' => $query,
             'time' => $timeframe,
         ];
-        
+
         $this->logger->debug('Getting growth patterns', [
             'query' => $query,
             'timeframe' => $timeframe,
         ]);
-        
+
         $request = $this->requestBuilder->createGetRequest('growth', $params);
         $response = $this->httpClient->sendRequest($request);
-        
+
         $data = $this->responseHandler->processResponse($response);
-        
+
         return $this->formatGrowthResponse($data);
     }
-    
+
     /**
      * Format the growth response data into a consistent structure.
      *
@@ -128,7 +128,7 @@ class GrowthResource
         if (isset($data['growth']) && is_array($data['growth'])) {
             return $data;
         }
-        
+
         // Construct a standardized response format
         $formatted = [
             'growth' => [],
@@ -136,7 +136,7 @@ class GrowthResource
             'query' => $data['query'] ?? null,
             'timeframe' => $data['timeframe'] ?? null,
         ];
-        
+
         // Handle different possible response structures
         if (isset($data['items']) && is_array($data['items'])) {
             $formatted['growth'] = $data['items'];
@@ -150,16 +150,16 @@ class GrowthResource
             // If we can't determine the structure, use the raw data
             $formatted['growth'] = $data;
         }
-        
+
         // Add growth metrics if available
         if (isset($data['growth_rate'])) {
             $formatted['growth_rate'] = $data['growth_rate'];
         }
-        
+
         if (isset($data['trend_direction'])) {
             $formatted['trend_direction'] = $data['trend_direction'];
         }
-        
+
         return $formatted;
     }
-} 
+}

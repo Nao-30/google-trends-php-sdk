@@ -9,9 +9,9 @@ use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class ResponseHandler
- * 
+ *
  * Implements the ResponseHandlerInterface for handling HTTP responses from the Google Trends API.
- * 
+ *
  * @package Gtrends\Sdk\Http
  */
 class ResponseHandler implements ResponseHandlerInterface
@@ -23,7 +23,7 @@ class ResponseHandler implements ResponseHandlerInterface
 
     /**
      * ResponseHandler constructor.
-     * 
+     *
      * @param ConfigurationInterface $config The SDK configuration
      */
     public function __construct(ConfigurationInterface $config)
@@ -38,17 +38,17 @@ class ResponseHandler implements ResponseHandlerInterface
     {
         if (!$this->isSuccessful($response)) {
             $errorDetails = $this->getErrorDetails($response);
-            
+
             // Make sure we have a string message
-            $message = is_string($errorDetails['message'] ?? null) 
-                ? $errorDetails['message'] 
+            $message = is_string($errorDetails['message'] ?? null)
+                ? $errorDetails['message']
                 : 'API request failed';
-                
+
             // Make sure we have an integer code
-            $code = is_int($errorDetails['code'] ?? null) 
-                ? $errorDetails['code'] 
+            $code = is_int($errorDetails['code'] ?? null)
+                ? $errorDetails['code']
                 : $response->getStatusCode();
-                
+
             throw new ApiException(
                 $message,
                 $code,
@@ -59,7 +59,7 @@ class ResponseHandler implements ResponseHandlerInterface
                 $errorDetails
             );
         }
-        
+
         return $this->extractJson($response);
     }
 
@@ -69,13 +69,13 @@ class ResponseHandler implements ResponseHandlerInterface
     public function extractJson(ResponseInterface $response): array
     {
         $body = (string) $response->getBody();
-        
+
         if (empty($body)) {
             return [];
         }
-        
+
         $data = json_decode($body, true);
-        
+
         if (json_last_error() !== JSON_ERROR_NONE) {
             throw new ApiException(
                 'Failed to decode JSON response: ' . json_last_error_msg(),
@@ -87,7 +87,7 @@ class ResponseHandler implements ResponseHandlerInterface
                 ['raw_body' => $body]
             );
         }
-        
+
         return $data;
     }
 
@@ -107,10 +107,10 @@ class ResponseHandler implements ResponseHandlerInterface
     {
         $statusCode = $response->getStatusCode();
         $reasonPhrase = $response->getReasonPhrase();
-        
+
         try {
             $body = $this->extractJson($response);
-            
+
             return [
                 'status_code' => $statusCode,
                 'reason' => $reasonPhrase,
@@ -140,14 +140,14 @@ class ResponseHandler implements ResponseHandlerInterface
     {
         // Basic transformation for different endpoints
         // More specific transformations can be added based on the endpoint
-        
+
         // Remove unnecessary metadata if present
         if (isset($data['meta'])) {
             $metadata = $data['meta'];
             unset($data['meta']);
             $data['_metadata'] = $metadata;
         }
-        
+
         // Standardize data format
         if (isset($data['data']) && is_array($data['data'])) {
             return [
@@ -156,7 +156,7 @@ class ResponseHandler implements ResponseHandlerInterface
                 'metadata' => $data['_metadata'] ?? [],
             ];
         }
-        
+
         // If data doesn't match expected format, return as is
         return $data;
     }
@@ -167,13 +167,13 @@ class ResponseHandler implements ResponseHandlerInterface
     public function validateResponseData(array $data, array $requiredFields): bool
     {
         $missingFields = [];
-        
+
         foreach ($requiredFields as $field) {
             if (!isset($data[$field])) {
                 $missingFields[] = $field;
             }
         }
-        
+
         if (!empty($missingFields)) {
             throw new ApiException(
                 'API response missing required fields',
@@ -185,7 +185,7 @@ class ResponseHandler implements ResponseHandlerInterface
                 ['missing_fields' => $missingFields]
             );
         }
-        
+
         return true;
     }
 
@@ -204,7 +204,7 @@ class ResponseHandler implements ResponseHandlerInterface
             'timestamp' => time(),
         ];
     }
-    
+
     /**
      * Get a preview of the response body for debugging.
      *
@@ -215,11 +215,11 @@ class ResponseHandler implements ResponseHandlerInterface
     protected function getBodyPreview(ResponseInterface $response, int $maxLength = 500): string
     {
         $body = (string) $response->getBody();
-        
+
         if (strlen($body) <= $maxLength) {
             return $body;
         }
-        
+
         return substr($body, 0, $maxLength) . '...';
     }
 
@@ -239,4 +239,4 @@ class ResponseHandler implements ResponseHandlerInterface
         $this->config = $config;
         return $this;
     }
-} 
+}
