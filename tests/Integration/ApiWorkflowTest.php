@@ -1,6 +1,7 @@
 <?php
 
 /** @noinspection PhpParamsInspection */
+
 /** @noinspection PhpParamsInspection */
 /** @noinspection PhpParamsInspection */
 /** @noinspection PhpParamsInspection */
@@ -37,7 +38,7 @@ use Psr\Http\Message\RequestInterface;
 class ApiWorkflowTest extends TestCase
 {
     /** @test */
-    public function itPerformsCompleteTrendingSearchWorkflow()
+    public function itPerformsCompleteTrendingSearchWorkflow(): void
     {
         // Create fixture data
         $trendingData = $this->loadFixture('trending_success');
@@ -184,7 +185,7 @@ class ApiWorkflowTest extends TestCase
         $mockHttpClient->method('sendRequest')
             ->willReturnCallback(function (RequestInterface $request) use (&$responses) {
                 if (empty($responses)) {
-                    $this->fail('No more mock responses available for request: '.$request->getUri());
+                    $this->fail('No more mock responses available for request: ' . $request->getUri());
                 }
 
                 return array_shift($responses);

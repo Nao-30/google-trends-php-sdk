@@ -1,8 +1,9 @@
 #!/usr/bin/env php
 <?php
+
 /**
  * Version Bumping Utility for Gtrends PHP SDK
- * 
+ *
  * This script updates version numbers in various files:
  * - composer.json
  * - src/Client.php (SDK_VERSION constant)
@@ -71,7 +72,7 @@ if (preg_match($pattern, $clientPhpContent, $matches)) {
         "const SDK_VERSION = '{$newVersion}';",
         $clientPhpContent
     );
-    
+
     file_put_contents($clientPhpPath, $clientPhpContent);
     echo "Updated SDK_VERSION in Client.php from {$oldSdkVersion} to {$newVersion}\n";
 } else {
@@ -80,4 +81,4 @@ if (preg_match($pattern, $clientPhpContent, $matches)) {
 
 echo "Version bump to {$newVersion} completed successfully!\n";
 echo "Don't forget to create a git tag: git tag -a v{$newVersion} -m 'Version {$newVersion}'\n";
-exit(0); 
+exit(0);

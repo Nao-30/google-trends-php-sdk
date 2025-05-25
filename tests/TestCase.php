@@ -50,7 +50,7 @@ class TestCase extends BaseTestCase
      */
     protected function loadFixture(string $name): ?string
     {
-        $path = __DIR__.'/fixtures/'.$name.'.json';
+        $path = __DIR__ . '/fixtures/' . $name . '.json';
 
         if (file_exists($path)) {
             return file_get_contents($path);

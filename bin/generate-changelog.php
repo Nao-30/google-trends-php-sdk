@@ -1,8 +1,9 @@
 #!/usr/bin/env php
 <?php
+
 /**
  * Changelog Generator for Gtrends PHP SDK
- * 
+ *
  * This script generates a CHANGELOG.md entry from Git commit messages,
  * organized into categories according to the Keep a Changelog format.
  */
@@ -52,7 +53,7 @@ $categories = [
 foreach ($output as $line) {
     $hash = substr($line, 0, 7);
     $message = substr($line, 8);
-    
+
     if (preg_match('/^(feat|add|feature)/i', $message)) {
         $categories['Added'][] = "- {$message} ({$hash})";
     } elseif (preg_match('/^(fix|bug|hotfix)/i', $message)) {
@@ -80,7 +81,7 @@ foreach ($categories as $category => $changes) {
     if (empty($changes)) {
         continue;
     }
-    
+
     $changelog .= "### {$category}\n";
     $changelog .= implode("\n", $changes) . "\n\n";
 }
@@ -95,7 +96,7 @@ if ($updateChangelog) {
         $header .= "and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).\n\n";
         file_put_contents($changelogPath, $header);
     }
-    
+
     $existingChangelog = file_get_contents($changelogPath);
     $pattern = '/# Changelog.*?\n\n/s';
     if (preg_match($pattern, $existingChangelog, $matches)) {
@@ -111,4 +112,4 @@ if ($updateChangelog) {
     echo $changelog;
 }
 
-exit(0); 
+exit(0);

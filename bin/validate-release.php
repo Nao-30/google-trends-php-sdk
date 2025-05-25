@@ -1,8 +1,9 @@
 #!/usr/bin/env php
 <?php
+
 /**
  * Release Checklist Validator for Gtrends PHP SDK
- * 
+ *
  * This script validates that all release requirements are met:
  * - All tests pass
  * - Documentation is up-to-date
@@ -79,20 +80,20 @@ if ($version !== null) {
     $composerJsonPath = $rootDir . '/composer.json';
     $composerJson = json_decode(file_get_contents($composerJsonPath), true);
     $composerVersion = $composerJson['version'] ?? null;
-    
+
     if ($composerVersion !== $version) {
         echo "❌ Version mismatch in composer.json: {$composerVersion} (expected {$version}).\n";
         echo "   Run 'php bin/bump-version.php {$version}' to update.\n";
         exit(1);
     }
-    
+
     echo "✅ composer.json version is {$version}.\n";
-    
+
     // Check Client.php SDK_VERSION
     $clientPhpPath = $rootDir . '/src/Client.php';
     $clientPhpContent = file_get_contents($clientPhpPath);
     $pattern = '/const SDK_VERSION = \'(.*?)\';/';
-    
+
     if (preg_match($pattern, $clientPhpContent, $matches)) {
         $sdkVersion = $matches[1];
         if ($sdkVersion !== $version) {
@@ -100,23 +101,23 @@ if ($version !== null) {
             echo "   Run 'php bin/bump-version.php {$version}' to update.\n";
             exit(1);
         }
-        
+
         echo "✅ Client.php SDK_VERSION is {$version}.\n";
     } else {
         echo "❌ Could not find SDK_VERSION constant in Client.php.\n";
         exit(1);
     }
-    
+
     // Check CHANGELOG.md
     $changelogPath = $rootDir . '/CHANGELOG.md';
     $changelogContent = file_exists($changelogPath) ? file_get_contents($changelogPath) : '';
-    
+
     if (!preg_match('/## \[' . preg_quote($version) . '\]/', $changelogContent)) {
         echo "❌ CHANGELOG.md does not contain an entry for version {$version}.\n";
         echo "   Run 'php bin/generate-changelog.php <previous-version> v{$version} --update' to update.\n";
         exit(1);
     }
-    
+
     echo "✅ CHANGELOG.md contains an entry for version {$version}.\n";
 }
 
@@ -172,4 +173,4 @@ if ($version !== null) {
     echo "3. Create a GitHub release at: https://github.com/yourusername/gtrends-cli-sdk/releases/new?tag=v{$version}\n";
 }
 
-exit(0); 
+exit(0);

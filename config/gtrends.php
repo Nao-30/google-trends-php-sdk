@@ -55,10 +55,10 @@ return [
     'retry' => [
         // Maximum number of retry attempts
         'max_attempts' => env('GTRENDS_RETRY_MAX_ATTEMPTS', 3),
-        
+
         // Initial delay in milliseconds before retrying
         'delay' => env('GTRENDS_RETRY_DELAY', 1000),
-        
+
         // Multiplier for exponential backoff
         'multiplier' => env('GTRENDS_RETRY_MULTIPLIER', 2),
     ],
@@ -74,7 +74,7 @@ return [
     'pagination' => [
         // Number of items per page
         'per_page' => env('GTRENDS_PAGINATION_PER_PAGE', 20),
-        
+
         // Maximum number of items to retrieve in total
         'max_items' => env('GTRENDS_PAGINATION_MAX_ITEMS', 100),
     ],
@@ -88,4 +88,4 @@ return [
     |
     */
     'debug' => env('GTRENDS_DEBUG', false),
-]; 
+];
