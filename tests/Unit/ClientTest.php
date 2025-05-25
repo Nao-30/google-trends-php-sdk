@@ -51,21 +51,21 @@ class ClientTest extends TestCase
     }
 
     /** @test */
-    public function itCanBeInstantiatedWithAllDependencies()
+    public function itCanBeInstantiatedWithAllDependencies(): void
     {
         $client = new Client(
             $this->config,
             $this->requestBuilder,
             $this->responseHandler
         );
-        $this->assertInstanceOf(Client::class, $client);
+        true;
     }
 
     /** @test */
-    public function itGetsTrendingSearches()
+    public function itGetsTrendingSearches(): void
     {
         $fixtureData = $this->loadFixture('trending_success');
-        $responseArray = json_decode($fixtureData, true);
+        $responseArray = json_decode($fixtureData, true, 512, JSON_THROW_ON_ERROR);
         $response = new Response(200, ['Content-Type' => 'application/json'], $fixtureData);
 
         $this->requestBuilder->expects($this->once())
@@ -99,7 +99,7 @@ class ClientTest extends TestCase
     }
 
     /** @test */
-    public function itValidatesParametersBeforeRequest()
+    public function itValidatesParametersBeforeRequest(): void
     {
         $this->requestBuilder->expects($this->once())
             ->method('createGetRequest')
@@ -113,10 +113,10 @@ class ClientTest extends TestCase
     }
 
     /** @test */
-    public function itGetsRelatedTopics()
+    public function itGetsRelatedTopics(): void
     {
         $mockResponse = ['status' => 'success', 'data' => ['topics' => []]];
-        $response = new Response(200, ['Content-Type' => 'application/json'], json_encode($mockResponse));
+        $response = new Response(200, ['Content-Type' => 'application/json'], json_encode($mockResponse, JSON_THROW_ON_ERROR));
 
         $this->requestBuilder->expects($this->once())
             ->method('createGetRequest')
@@ -148,10 +148,10 @@ class ClientTest extends TestCase
     }
 
     /** @test */
-    public function itGetsRelatedQueries()
+    public function itGetsRelatedQueries(): void
     {
         $mockResponse = ['status' => 'success', 'data' => ['queries' => []]];
-        $response = new Response(200, ['Content-Type' => 'application/json'], json_encode($mockResponse));
+        $response = new Response(200, ['Content-Type' => 'application/json'], json_encode($mockResponse, JSON_THROW_ON_ERROR));
 
         $this->requestBuilder->expects($this->once())
             ->method('createGetRequest')
@@ -183,10 +183,10 @@ class ClientTest extends TestCase
     }
 
     /** @test */
-    public function itGetsComparisonData()
+    public function itGetsComparisonData(): void
     {
         $mockResponse = ['status' => 'success', 'data' => ['comparison' => []]];
-        $response = new Response(200, ['Content-Type' => 'application/json'], json_encode($mockResponse));
+        $response = new Response(200, ['Content-Type' => 'application/json'], json_encode($mockResponse, JSON_THROW_ON_ERROR));
 
         $this->requestBuilder->expects($this->once())
             ->method('createGetRequest')

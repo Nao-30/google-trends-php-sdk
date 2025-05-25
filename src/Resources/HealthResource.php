@@ -1,11 +1,11 @@
 <?php
 
-namespace GtrendsSdk\Resources;
+namespace Gtrends\Sdk\Resources;
 
-use GtrendsSdk\Contracts\ConfigurationInterface;
-use GtrendsSdk\Contracts\RequestBuilderInterface;
-use GtrendsSdk\Contracts\ResponseHandlerInterface;
-use GtrendsSdk\Http\HttpClient;
+use Gtrends\Sdk\Contracts\ConfigurationInterface;
+use Gtrends\Sdk\Contracts\RequestBuilderInterface;
+use Gtrends\Sdk\Contracts\ResponseHandlerInterface;
+use Gtrends\Sdk\Http\HttpClient;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
@@ -15,7 +15,7 @@ use Psr\Log\NullLogger;
  * This class encapsulates operations related to checking the health status
  * of the Google Trends API service.
  *
- * @package GtrendsSdk\Resources
+ * @package Gtrends\Sdk\Resources
  */
 class HealthResource
 {
@@ -72,7 +72,7 @@ class HealthResource
      *
      * @return array Health check data
      *
-     * @throws \GtrendsSdk\Exceptions\NetworkException When a network error occurs
+     * @throws \Gtrends\Sdk\Exceptions\NetworkException When a network error occurs
      */
     public function checkHealth(): array
     {

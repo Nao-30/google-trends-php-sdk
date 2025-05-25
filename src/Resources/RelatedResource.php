@@ -1,12 +1,12 @@
 <?php
 
-namespace GtrendsSdk\Resources;
+namespace Gtrends\Sdk\Resources;
 
-use GtrendsSdk\Contracts\ConfigurationInterface;
-use GtrendsSdk\Contracts\RequestBuilderInterface;
-use GtrendsSdk\Contracts\ResponseHandlerInterface;
-use GtrendsSdk\Exceptions\ValidationException;
-use GtrendsSdk\Http\HttpClient;
+use Gtrends\Sdk\Contracts\ConfigurationInterface;
+use Gtrends\Sdk\Contracts\RequestBuilderInterface;
+use Gtrends\Sdk\Contracts\ResponseHandlerInterface;
+use Gtrends\Sdk\Exceptions\ValidationException;
+use Gtrends\Sdk\Http\HttpClient;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
@@ -16,7 +16,7 @@ use Psr\Log\NullLogger;
  * This class encapsulates all operations related to finding related topics
  * and related queries based on a search term using the Google Trends API.
  *
- * @package GtrendsSdk\Resources
+ * @package Gtrends\Sdk\Resources
  */
 class RelatedResource
 {
@@ -78,8 +78,8 @@ class RelatedResource
      * @return array Related topics data
      *
      * @throws ValidationException When the parameters are invalid
-     * @throws \GtrendsSdk\Exceptions\ApiException When the API returns an error
-     * @throws \GtrendsSdk\Exceptions\NetworkException When a network error occurs
+     * @throws \Gtrends\Sdk\Exceptions\ApiException When the API returns an error
+     * @throws \Gtrends\Sdk\Exceptions\NetworkException When a network error occurs
      */
     public function getRelatedTopics(string $topic, ?string $region = null, string $timeframe = 'today 3-m', string $category = '0'): array
     {
@@ -134,8 +134,8 @@ class RelatedResource
      * @return array Related queries data
      *
      * @throws ValidationException When the parameters are invalid
-     * @throws \GtrendsSdk\Exceptions\ApiException When the API returns an error
-     * @throws \GtrendsSdk\Exceptions\NetworkException When a network error occurs
+     * @throws \Gtrends\Sdk\Exceptions\ApiException When the API returns an error
+     * @throws \Gtrends\Sdk\Exceptions\NetworkException When a network error occurs
      */
     public function getRelatedQueries(string $topic, ?string $region = null, string $timeframe = 'today 3-m', string $category = '0'): array
     {

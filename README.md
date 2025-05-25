@@ -12,7 +12,7 @@ A professional-grade PHP SDK for the Google Trends CLI API. This SDK provides a 
 
 ## Requirements
 
-- PHP 7.4 or higher
+- PHP 8.0 or higher
 - JSON extension
 - cURL extension
 - Composer

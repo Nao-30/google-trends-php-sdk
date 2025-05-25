@@ -2,6 +2,8 @@
 
 namespace Gtrends\Sdk\Contracts;
 
+use Gtrends\Sdk\Exceptions\ConfigurationException;
+
 /**
  * Interface ConfigurationInterface
  *
@@ -28,7 +30,7 @@ interface ConfigurationInterface
      * @param mixed $value The configuration value
      * @return self
      *
-     * @throws \Gtrends\Sdk\Exceptions\ConfigurationException When the key or value is invalid
+     * @throws ConfigurationException When the key or value is invalid
      */
     public function set(string $key, $value): self;
 
@@ -53,7 +55,7 @@ interface ConfigurationInterface
      * @param array $config Configuration array
      * @return self
      *
-     * @throws \Gtrends\Sdk\Exceptions\ConfigurationException When the configuration is invalid
+     * @throws ConfigurationException When the configuration is invalid
      */
     public function load(array $config): self;
 
@@ -69,8 +71,8 @@ interface ConfigurationInterface
      * Validate the configuration.
      *
      * @return bool True if the configuration is valid, false otherwise
-     *
-     * @throws \Gtrends\Sdk\Exceptions\ConfigurationException When the configuration is invalid
+     *getMaxRetries
+     * @throws ConfigurationException When the configuration is invalid
      */
     public function validate(): bool;
 

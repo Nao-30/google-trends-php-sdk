@@ -2,6 +2,7 @@
 
 namespace Gtrends\Sdk\Http;
 
+use Gtrends\Sdk\Configuration\Config;
 use Gtrends\Sdk\Contracts\ConfigurationInterface;
 use Gtrends\Sdk\Exceptions\NetworkException;
 use GuzzleHttp\Client as GuzzleClient;
@@ -29,9 +30,14 @@ class HttpClient
     protected GuzzleClient $client;
 
     /**
-     * @var ConfigurationInterface The SDK configuration
+     * @var Config The SDK configuration
      */
-    protected ConfigurationInterface $config;
+    protected Config $config;
+
+    /**
+     * @var Config The SDK configuration
+     */
+    protected Config $configuration;
 
     /**
      * @var LoggerInterface The logger instance
@@ -41,12 +47,12 @@ class HttpClient
     /**
      * HttpClient constructor.
      *
-     * @param ConfigurationInterface $config The SDK configuration
+     * @param Config $configuration The SDK configuration
      * @param LoggerInterface|null $logger The logger instance (optional)
      */
-    public function __construct(ConfigurationInterface $config, ?LoggerInterface $logger = null)
+    public function __construct(Config $configuration, ?LoggerInterface $logger = null)
     {
-        $this->config = $config;
+        $this->config = $configuration;
         $this->logger = $logger ?? new NullLogger();
         $this->initializeClient();
     }

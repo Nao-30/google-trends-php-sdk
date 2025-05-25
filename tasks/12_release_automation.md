@@ -11,7 +11,7 @@ This task involves creating a comprehensive GitHub Actions workflow for automati
 Create a complete CI/CD pipeline using GitHub Actions with the following stages:
 
 #### 1.1. Testing Stage
-- Set up PHP environment with multiple PHP versions (7.4, 8.0, 8.1, 8.2)
+- Set up PHP environment with multiple PHP versions (8.0, 8.1, 8.2)
 - Install Composer dependencies
 - Run PHP linting
 - Execute PHPUnit tests

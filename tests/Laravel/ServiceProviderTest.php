@@ -16,7 +16,7 @@ use Orchestra\Testbench\TestCase;
 class ServiceProviderTest extends TestCase
 {
     /** @test */
-    public function itRegistersClientAsSingleton()
+    public function itRegistersClientAsSingleton(): void
     {
         $client1 = $this->app->make(Client::class);
         $client2 = $this->app->make(Client::class);
@@ -26,7 +26,7 @@ class ServiceProviderTest extends TestCase
     }
 
     /** @test */
-    public function itLoadsConfigFromLaravelConfig()
+    public function itLoadsConfigFromLaravelConfig(): void
     {
         $client = $this->app->make(Client::class);
 
@@ -39,7 +39,7 @@ class ServiceProviderTest extends TestCase
     }
 
     /** @test */
-    public function itPublishesConfigFile()
+    public function itPublishesConfigFile(): void
     {
         $this->artisan('vendor:publish', [
             '--provider' => GtrendsServiceProvider::class,
@@ -56,7 +56,7 @@ class ServiceProviderTest extends TestCase
      *
      * @return array<int, class-string>
      */
-    protected function getPackageProviders($app)
+    protected function getPackageProviders($app): array: array
     {
         return [
             GtrendsServiceProvider::class,
@@ -68,7 +68,7 @@ class ServiceProviderTest extends TestCase
      *
      * @param Application $app
      */
-    protected function defineEnvironment($app)
+    protected function defineEnvironment($app): void
     {
         $app['config']->set('gtrends.api_base_uri', 'https://test-api.example.com');
         $app['config']->set('gtrends.api_timeout', 15);
@@ -79,7 +79,7 @@ class ServiceProviderTest extends TestCase
      *
      * @return Config
      */
-    private function getClientConfig(Client $client)
+    private function getClientConfig(Client $client): Config: Config
     {
         $reflection = new \ReflectionClass($client);
         $property = $reflection->getProperty('config');

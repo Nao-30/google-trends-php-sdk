@@ -1,5 +1,7 @@
 <?php
 
+/** @noinspection SpellCheckingInspection */
+
 namespace Gtrends\Sdk\Tests\Unit\Http;
 
 use Gtrends\Sdk\Exceptions\ValidationException;
@@ -13,8 +15,10 @@ use Gtrends\Sdk\Tests\TestCase;
  */
 class RequestBuilderTest extends TestCase
 {
-    /** @test */
-    public function itBuildsGetRequestWithQueryParams()
+    /** @test
+     * @throws ValidationException
+     */
+    public function itBuildsGetRequestWithQueryParams(): void
     {
         $config = $this->createConfig(['base_uri' => 'http://localhost:3000/api/']);
         $builder = new RequestBuilder($config);
@@ -29,8 +33,10 @@ class RequestBuilderTest extends TestCase
         $this->assertEquals('region=US&date=2023-05-30', $request->getUri()->getQuery());
     }
 
-    /** @test */
-    public function itBuildsPostRequestWithJsonBody()
+    /** @test
+     * @throws ValidationException
+     */
+    public function itBuildsPostRequestWithJsonBody(): void
     {
         $config = $this->createConfig(['base_uri' => 'http://localhost:3000/api/']);
         $builder = new RequestBuilder($config);
@@ -46,12 +52,14 @@ class RequestBuilderTest extends TestCase
         $this->assertEquals('/api/comparison', $request->getUri()->getPath());
         $this->assertEquals('application/json', $request->getHeaderLine('Content-Type'));
 
-        $body = json_decode($request->getBody()->getContents(), true);
+        $body = json_decode($request->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertEquals($bodyData, $body);
     }
 
-    /** @test */
-    public function itAddsDefaultHeaders()
+    /** @test
+     * @throws ValidationException
+     */
+    public function itAddsDefaultHeaders(): void
     {
         $config = $this->createConfig(['base_uri' => 'http://localhost:3000/api/']);
         $builder = new RequestBuilder($config);
@@ -62,8 +70,10 @@ class RequestBuilderTest extends TestCase
         $this->assertTrue($request->hasHeader('Accept'));
     }
 
-    /** @test */
-    public function itAddsCustomHeaders()
+    /** @test
+     * @throws ValidationException
+     */
+    public function itAddsCustomHeaders(): void
     {
         $config = $this->createConfig(['base_uri' => 'http://localhost:3000/api/']);
         $builder = new RequestBuilder($config);
@@ -78,7 +88,7 @@ class RequestBuilderTest extends TestCase
     }
 
     /** @test */
-    public function itValidatesRequiredParameters()
+    public function itValidatesRequiredParameters(): void
     {
         $config = $this->createConfig(['base_uri' => 'http://localhost:3000/api/']);
         $builder = new RequestBuilder($config);
@@ -92,8 +102,10 @@ class RequestBuilderTest extends TestCase
         );
     }
 
-    /** @test */
-    public function itConstructsFullUriFromBaseAndPath()
+    /** @test
+     * @throws ValidationException
+     */
+    public function itConstructsFullUriFromBaseAndPath(): void
     {
         $config = $this->createConfig(['base_uri' => 'http://localhost:3000/api/']);
         $builder = new RequestBuilder($config);
@@ -105,8 +117,10 @@ class RequestBuilderTest extends TestCase
         $this->assertEquals('/api/trending', $uri->getPath());
     }
 
-    /** @test */
-    public function itHandlesUrlEncodingProperly()
+    /** @test
+     * @throws ValidationException
+     */
+    public function itHandlesUrlEncodingProperly(): void
     {
         $config = $this->createConfig(['base_uri' => 'http://localhost:3000/api/']);
         $builder = new RequestBuilder($config);

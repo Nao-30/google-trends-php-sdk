@@ -77,8 +77,8 @@ class TrendingResource
      * @return array Trending search data
      *
      * @throws ValidationException When the parameters are invalid
-     * @throws \GtrendsSdk\Exceptions\ApiException When the API returns an error
-     * @throws \GtrendsSdk\Exceptions\NetworkException When a network error occurs
+     * @throws \Gtrends\Sdk\Exceptions\ApiException When the API returns an error
+     * @throws \Gtrends\Sdk\Exceptions\NetworkException When a network error occurs
      */
     public function getTrending(?string $region = null, int $limit = 10, bool $includeNews = false): array
     {

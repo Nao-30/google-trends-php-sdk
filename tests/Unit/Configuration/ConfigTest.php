@@ -14,7 +14,7 @@ use Gtrends\Sdk\Tests\TestCase;
 class ConfigTest extends TestCase
 {
     /** @test */
-    public function itLoadsConfigFromArray()
+    public function itLoadsConfigFromArray(): void
     {
         $config = new Config([
             'base_uri' => 'https://test-api.example.com',
@@ -26,7 +26,7 @@ class ConfigTest extends TestCase
     }
 
     /** @test */
-    public function itReturnsDefaultValuesForMissingConfig()
+    public function itReturnsDefaultValuesForMissingConfig(): void
     {
         $config = new Config([]);
 
@@ -36,7 +36,7 @@ class ConfigTest extends TestCase
     }
 
     /** @test */
-    public function itLoadsConfigFromEnvironmentVariables()
+    public function itLoadsConfigFromEnvironmentVariables(): void
     {
         // Set environment variables
         $_ENV['GTRENDS_BASE_URI'] = 'https://env-api.example.com';
@@ -53,7 +53,7 @@ class ConfigTest extends TestCase
     }
 
     /** @test */
-    public function itValidatesRequiredConfigOptions()
+    public function itValidatesRequiredConfigOptions(): void
     {
         $this->expectException(ConfigurationException::class);
 
@@ -72,7 +72,7 @@ class ConfigTest extends TestCase
     }
 
     /** @test */
-    public function itSupportsDotNotationForNestedConfig()
+    public function itSupportsDotNotationForNestedConfig(): void
     {
         $config = new Config([
             'retry' => [
@@ -86,7 +86,7 @@ class ConfigTest extends TestCase
     }
 
     /** @test */
-    public function itReturnsAllConfigAsArray()
+    public function itReturnsAllConfigAsArray(): void
     {
         $configData = [
             'base_uri' => 'https://test-api.example.com',
@@ -102,7 +102,7 @@ class ConfigTest extends TestCase
     }
 
     /** @test */
-    public function itCanSetConfigValuesAfterInitialization()
+    public function itCanSetConfigValuesAfterInitialization(): void
     {
         $config = new Config([
             'base_uri' => 'https://test-api.example.com',

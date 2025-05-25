@@ -1,5 +1,7 @@
 <?php
 
+/** @noinspection GrazieInspection */
+
 namespace Gtrends\Sdk\Tests;
 
 use Gtrends\Sdk\Configuration\Config;

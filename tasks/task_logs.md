@@ -310,7 +310,7 @@
 
 ## [2023-11-23] Release Automation Implementation
 - Implemented comprehensive GitHub Actions workflow for CI/CD:
-  - Created .github/workflows/ci.yml for testing across multiple PHP versions (7.4, 8.0, 8.1, 8.2)
+  - Created .github/workflows/ci.yml for testing across multiple PHP versions (8.0, 8.1, 8.2)
   - Created .github/workflows/release.yml for automated releases triggered by version tags
   - Created .github/workflows/security.yml for weekly security scanning
   - Added .github/dependabot.yml for automated dependency updates
@@ -324,7 +324,7 @@
 - The project is ready for a version 1.0.0 release with full automation support
 
 ## [Current Date] Extended PHP and Laravel Version Support
-- Updated composer.json to support PHP versions 7.4, 8.0, 8.1, 8.2, and 8.3
+- Updated composer.json to support PHP versions 8.0, 8.1, 8.2, and 8.3
 - Updated CI workflow to test against all supported PHP versions
 - Extended Laravel support to include versions 10, 11, and 12
 - Added compatibility matrix in CI workflow to exclude incompatible PHP/Laravel combinations

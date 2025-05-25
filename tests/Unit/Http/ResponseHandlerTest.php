@@ -15,7 +15,7 @@ use GuzzleHttp\Psr7\Response;
 class ResponseHandlerTest extends TestCase
 {
     /** @test */
-    public function itExtractsJsonDataFromSuccessfulResponse()
+    public function itExtractsJsonDataFromSuccessfulResponse(): void
     {
         $fixtureData = $this->loadFixture('trending_success');
         $response = new Response(200, ['Content-Type' => 'application/json'], $fixtureData);
@@ -31,7 +31,7 @@ class ResponseHandlerTest extends TestCase
     }
 
     /** @test */
-    public function itThrowsApiExceptionForErrorResponses()
+    public function itThrowsApiExceptionForErrorResponses(): void
     {
         $fixtureData = $this->loadFixture('api_error');
         $response = new Response(400, ['Content-Type' => 'application/json'], $fixtureData);
@@ -44,7 +44,7 @@ class ResponseHandlerTest extends TestCase
     }
 
     /** @test */
-    public function itThrowsApiExceptionForHttpErrorResponses()
+    public function itThrowsApiExceptionForHttpErrorResponses(): void
     {
         $response = new Response(500, ['Content-Type' => 'text/html'], 'Internal Server Error');
 
@@ -56,7 +56,7 @@ class ResponseHandlerTest extends TestCase
     }
 
     /** @test */
-    public function itThrowsApiExceptionForInvalidJson()
+    public function itThrowsApiExceptionForInvalidJson(): void
     {
         $response = new Response(200, ['Content-Type' => 'application/json'], '{invalid json}');
 
@@ -68,7 +68,7 @@ class ResponseHandlerTest extends TestCase
     }
 
     /** @test */
-    public function itHandlesEmptyResponses()
+    public function itHandlesEmptyResponses(): void
     {
         $response = new Response(204);
 
@@ -80,7 +80,7 @@ class ResponseHandlerTest extends TestCase
     }
 
     /** @test */
-    public function itProcessesResponseWithNestedData()
+    public function itProcessesResponseWithNestedData(): void
     {
         $jsonData = json_encode([
             'status' => 'success',
@@ -91,7 +91,7 @@ class ResponseHandlerTest extends TestCase
                     ],
                 ],
             ],
-        ]);
+        ], JSON_THROW_ON_ERROR);
 
         $response = new Response(200, ['Content-Type' => 'application/json'], $jsonData);
 
@@ -103,13 +103,13 @@ class ResponseHandlerTest extends TestCase
     }
 
     /** @test */
-    public function itIncludesDetailedErrorInformationInExceptions()
+    public function itIncludesDetailedErrorInformationInExceptions(): void
     {
         $fixtureData = json_encode([
             'error' => 'Invalid request parameters',
             'code' => 400,
             'details' => ['missing' => 'keyword'],
-        ]);
+        ], JSON_THROW_ON_ERROR);
         $response = new Response(400, ['Content-Type' => 'application/json'], $fixtureData);
 
         $config = $this->createConfig();

@@ -73,7 +73,7 @@
 ## Recent Updates
 
 As of Current Date:
-- Extended PHP version support to include PHP 7.4, 8.0, 8.1, 8.2, and 8.3
+- Extended PHP version support to include PHP 8.0, 8.1, 8.2, and 8.3
 - Extended Laravel support to include versions 10, 11, and 12
 - Updated CI workflow to test against all supported PHP/Laravel combinations
 - Implemented compatibility matrix in CI workflow to exclude incompatible combinations
@@ -86,7 +86,7 @@ As of Current Date:
 
 The SDK is now in a stable state with all functionality implemented, tests passing, and release automation in place. The integration with the gtrends CLI API is working properly, and the codebase follows consistent naming and architectural patterns.
 
-The project supports a wide range of PHP versions (7.4-8.3) and Laravel versions (8-12) to maximize compatibility with different environments.
+The project supports a wide range of PHP versions (8.0-8.3) and Laravel versions (10-12) to maximize compatibility with different environments.
 
 The project has progressed through all implementation phases:
 1. Initial setup phase

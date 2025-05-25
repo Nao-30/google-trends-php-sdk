@@ -27,6 +27,7 @@ use Gtrends\Sdk\Http\RequestBuilder;
 use Gtrends\Sdk\Http\ResponseHandler;
 use Gtrends\Sdk\Tests\TestCase;
 use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Http\Message\RequestInterface;
 
@@ -63,7 +64,7 @@ class ApiWorkflowTest extends TestCase
     }
 
     /** @test */
-    public function itPerformsCompleteRelatedTopicsWorkflow()
+    public function itPerformsCompleteRelatedTopicsWorkflow(): void
     {
         // Create mock data
         $mockData = [
@@ -83,7 +84,7 @@ class ApiWorkflowTest extends TestCase
 
         // Create mock responses
         $mockResponses = [
-            new Response(200, ['Content-Type' => 'application/json'], json_encode($mockData)),
+            new Response(200, ['Content-Type' => 'application/json'], json_encode($mockData, JSON_THROW_ON_ERROR)),
         ];
 
         // Setup client with mocks
@@ -102,7 +103,7 @@ class ApiWorkflowTest extends TestCase
     }
 
     /** @test */
-    public function itHandlesErrorResponsesAppropriately()
+    public function itHandlesErrorResponsesAppropriately(): void
     {
         // Create error data
         $errorData = json_encode([
@@ -115,7 +116,7 @@ class ApiWorkflowTest extends TestCase
                     'reason' => 'Invalid region code. Must be a valid ISO 3166-1 alpha-2 code.',
                 ],
             ],
-        ]);
+        ], JSON_THROW_ON_ERROR);
 
         // Create mock responses
         $mockResponses = [
@@ -132,7 +133,7 @@ class ApiWorkflowTest extends TestCase
     }
 
     /** @test */
-    public function itPerformsCompleteComparisonWorkflow()
+    public function itPerformsCompleteComparisonWorkflow(): void
     {
         // Create mock data
         $mockData = [
@@ -151,7 +152,7 @@ class ApiWorkflowTest extends TestCase
 
         // Create mock responses
         $mockResponses = [
-            new Response(200, ['Content-Type' => 'application/json'], json_encode($mockData)),
+            new Response(200, ['Content-Type' => 'application/json'], json_encode($mockData, JSON_THROW_ON_ERROR)),
         ];
 
         // Setup client with mocks
@@ -176,6 +177,8 @@ class ApiWorkflowTest extends TestCase
      * @param array $responses Array of Response objects
      *
      * @return HttpClient|MockObject
+     * @throws Exception
+     * @throws Exception
      */
     protected function createMockHttpClient(array $responses): MockObject
     {

@@ -139,10 +139,12 @@ This file breaks down the overall project implementation into specific tasks bas
 ## 12. Extended Compatibility
 
 - [x] Update PHP version support
-  - [x] Add support for PHP 7.4, 8.0, 8.1, 8.2, and 8.3
+  - [x] Add support for PHP 8.0, 8.1, 8.2, and 8.3
   - [x] Update CI workflow to test against all supported PHP versions
 
 - [x] Update Laravel version support
   - [x] Add support for Laravel 10, 11, and 12
   - [x] Configure compatibility matrix for PHP/Laravel versions
   - [x] Update test configuration 
+
+# TODO: continue from vendor/bin/phpstan analyse src tests --level=5

@@ -16,14 +16,14 @@ use Orchestra\Testbench\TestCase;
 class FacadeTest extends TestCase
 {
     /** @test */
-    public function itResolvesToTheCorrectUnderlyingInstance()
+    public function itResolvesToTheCorrectUnderlyingInstance(): void
     {
         $this->assertInstanceOf(Client::class, app(Client::class));
         $this->assertInstanceOf(Client::class, Gtrends::getFacadeRoot());
     }
 
     /** @test */
-    public function itProxiesMethodCallsToClient()
+    public function itProxiesMethodCallsToClient(): void
     {
         // Mock the client
         $mock = $this->mock(Client::class);
@@ -43,7 +43,7 @@ class FacadeTest extends TestCase
     }
 
     /** @test */
-    public function itPassesAllApiMethodCallsToClient()
+    public function itPassesAllApiMethodCallsToClient(): void
     {
         // Mock the client
         $mock = $this->mock(Client::class);
@@ -86,7 +86,7 @@ class FacadeTest extends TestCase
      *
      * @return array<int, class-string>
      */
-    protected function getPackageProviders($app)
+    protected function getPackageProviders($app): array: array
     {
         return [
             GtrendsServiceProvider::class,
@@ -100,7 +100,7 @@ class FacadeTest extends TestCase
      *
      * @return array<string, class-string>
      */
-    protected function getPackageAliases($app)
+    protected function getPackageAliases($app): array: array
     {
         return [
             'Gtrends' => Gtrends::class,
@@ -112,7 +112,7 @@ class FacadeTest extends TestCase
      *
      * @param Application $app
      */
-    protected function defineEnvironment($app)
+    protected function defineEnvironment($app): void
     {
         $app['config']->set('gtrends.api_base_uri', 'https://test-api.example.com');
     }
