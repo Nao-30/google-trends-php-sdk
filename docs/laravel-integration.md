@@ -25,7 +25,7 @@ For Laravel 5.4 and below, add the service provider to the `providers` array in 
 ```php
 'providers' => [
     // Other service providers...
-    Gtrends\Laravel\GtrendsServiceProvider::class,
+    Gtrends\Sdk\Laravel\GtrendsServiceProvider::class,
 ],
 ```
 
@@ -36,7 +36,7 @@ If you'd like to use the facade, add it to the `aliases` array in `config/app.ph
 ```php
 'aliases' => [
     // Other facades...
-    'Gtrends' => Gtrends\Laravel\Facades\Gtrends::class,
+    'Gtrends' => Gtrends\Sdk\Laravel\Facades\Gtrends::class,
 ],
 ```
 
@@ -47,7 +47,7 @@ If you'd like to use the facade, add it to the `aliases` array in `config/app.ph
 To publish the configuration file, run:
 
 ```bash
-php artisan vendor:publish --provider="Gtrends\Laravel\GtrendsServiceProvider"
+php artisan vendor:publish --provider="Gtrends\Sdk\Laravel\GtrendsServiceProvider"
 ```
 
 This will create a `config/gtrends.php` file in your application.

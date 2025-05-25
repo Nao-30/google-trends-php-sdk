@@ -2,14 +2,19 @@
 
 namespace Gtrends\Sdk\Tests\Unit\Configuration;
 
-use Gtrends\Sdk\Tests\TestCase;
 use Gtrends\Sdk\Configuration\Config;
 use Gtrends\Sdk\Exceptions\ConfigurationException;
+use Gtrends\Sdk\Tests\TestCase;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class ConfigTest extends TestCase
 {
     /** @test */
-    public function it_loads_config_from_array()
+    public function itLoadsConfigFromArray()
     {
         $config = new Config([
             'base_uri' => 'https://test-api.example.com',
@@ -21,7 +26,7 @@ class ConfigTest extends TestCase
     }
 
     /** @test */
-    public function it_returns_default_values_for_missing_config()
+    public function itReturnsDefaultValuesForMissingConfig()
     {
         $config = new Config([]);
 
@@ -31,7 +36,7 @@ class ConfigTest extends TestCase
     }
 
     /** @test */
-    public function it_loads_config_from_environment_variables()
+    public function itLoadsConfigFromEnvironmentVariables()
     {
         // Set environment variables
         $_ENV['GTRENDS_BASE_URI'] = 'https://env-api.example.com';
@@ -44,12 +49,11 @@ class ConfigTest extends TestCase
         $this->assertEquals(20, $config->get('timeout'));
 
         // Clean up environment
-        unset($_ENV['GTRENDS_BASE_URI']);
-        unset($_ENV['GTRENDS_TIMEOUT']);
+        unset($_ENV['GTRENDS_BASE_URI'], $_ENV['GTRENDS_TIMEOUT']);
     }
 
     /** @test */
-    public function it_validates_required_config_options()
+    public function itValidatesRequiredConfigOptions()
     {
         $this->expectException(ConfigurationException::class);
 
@@ -68,13 +72,13 @@ class ConfigTest extends TestCase
     }
 
     /** @test */
-    public function it_supports_dot_notation_for_nested_config()
+    public function itSupportsDotNotationForNestedConfig()
     {
         $config = new Config([
             'retry' => [
                 'max_attempts' => 5,
-                'delay' => 2000
-            ]
+                'delay' => 2000,
+            ],
         ]);
 
         $this->assertEquals(5, $config->get('retry.max_attempts'));
@@ -82,7 +86,7 @@ class ConfigTest extends TestCase
     }
 
     /** @test */
-    public function it_returns_all_config_as_array()
+    public function itReturnsAllConfigAsArray()
     {
         $configData = [
             'base_uri' => 'https://test-api.example.com',
@@ -98,7 +102,7 @@ class ConfigTest extends TestCase
     }
 
     /** @test */
-    public function it_can_set_config_values_after_initialization()
+    public function itCanSetConfigValuesAfterInitialization()
     {
         $config = new Config([
             'base_uri' => 'https://test-api.example.com',

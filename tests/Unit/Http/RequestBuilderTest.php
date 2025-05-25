@@ -2,15 +2,19 @@
 
 namespace Gtrends\Sdk\Tests\Unit\Http;
 
-use Gtrends\Sdk\Tests\TestCase;
-use Gtrends\Sdk\Http\RequestBuilder;
-use Gtrends\Sdk\Configuration\Config;
 use Gtrends\Sdk\Exceptions\ValidationException;
+use Gtrends\Sdk\Http\RequestBuilder;
+use Gtrends\Sdk\Tests\TestCase;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class RequestBuilderTest extends TestCase
 {
     /** @test */
-    public function it_builds_get_request_with_query_params()
+    public function itBuildsGetRequestWithQueryParams()
     {
         $config = $this->createConfig(['base_uri' => 'http://localhost:3000/api/']);
         $builder = new RequestBuilder($config);
@@ -26,7 +30,7 @@ class RequestBuilderTest extends TestCase
     }
 
     /** @test */
-    public function it_builds_post_request_with_json_body()
+    public function itBuildsPostRequestWithJsonBody()
     {
         $config = $this->createConfig(['base_uri' => 'http://localhost:3000/api/']);
         $builder = new RequestBuilder($config);
@@ -47,7 +51,7 @@ class RequestBuilderTest extends TestCase
     }
 
     /** @test */
-    public function it_adds_default_headers()
+    public function itAddsDefaultHeaders()
     {
         $config = $this->createConfig(['base_uri' => 'http://localhost:3000/api/']);
         $builder = new RequestBuilder($config);
@@ -59,7 +63,7 @@ class RequestBuilderTest extends TestCase
     }
 
     /** @test */
-    public function it_adds_custom_headers()
+    public function itAddsCustomHeaders()
     {
         $config = $this->createConfig(['base_uri' => 'http://localhost:3000/api/']);
         $builder = new RequestBuilder($config);
@@ -74,7 +78,7 @@ class RequestBuilderTest extends TestCase
     }
 
     /** @test */
-    public function it_validates_required_parameters()
+    public function itValidatesRequiredParameters()
     {
         $config = $this->createConfig(['base_uri' => 'http://localhost:3000/api/']);
         $builder = new RequestBuilder($config);
@@ -89,7 +93,7 @@ class RequestBuilderTest extends TestCase
     }
 
     /** @test */
-    public function it_constructs_full_uri_from_base_and_path()
+    public function itConstructsFullUriFromBaseAndPath()
     {
         $config = $this->createConfig(['base_uri' => 'http://localhost:3000/api/']);
         $builder = new RequestBuilder($config);
@@ -102,7 +106,7 @@ class RequestBuilderTest extends TestCase
     }
 
     /** @test */
-    public function it_handles_url_encoding_properly()
+    public function itHandlesUrlEncodingProperly()
     {
         $config = $this->createConfig(['base_uri' => 'http://localhost:3000/api/']);
         $builder = new RequestBuilder($config);

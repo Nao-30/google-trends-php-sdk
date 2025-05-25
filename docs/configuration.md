@@ -97,7 +97,7 @@ The SDK uses the following priority order for configuration (highest to lowest):
 When using the SDK with Laravel, you can publish the configuration file:
 
 ```bash
-php artisan vendor:publish --provider="Gtrends\Laravel\GtrendsServiceProvider"
+php artisan vendor:publish --provider="Gtrends\Sdk\Laravel\GtrendsServiceProvider"
 ```
 
 This will create a `config/gtrends.php` file that you can modify:

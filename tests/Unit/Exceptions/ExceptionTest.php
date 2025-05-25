@@ -2,17 +2,22 @@
 
 namespace Gtrends\Sdk\Tests\Unit\Exceptions;
 
-use Gtrends\Sdk\Tests\TestCase;
-use Gtrends\Sdk\Exceptions\GtrendsException;
 use Gtrends\Sdk\Exceptions\ApiException;
 use Gtrends\Sdk\Exceptions\ConfigurationException;
+use Gtrends\Sdk\Exceptions\GtrendsException;
 use Gtrends\Sdk\Exceptions\NetworkException;
 use Gtrends\Sdk\Exceptions\ValidationException;
+use Gtrends\Sdk\Tests\TestCase;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class ExceptionTest extends TestCase
 {
     /** @test */
-    public function base_exception_can_be_instantiated_with_message()
+    public function baseExceptionCanBeInstantiatedWithMessage()
     {
         $exception = new GtrendsException('Test exception message');
 
@@ -21,7 +26,7 @@ class ExceptionTest extends TestCase
     }
 
     /** @test */
-    public function base_exception_supports_context_data()
+    public function baseExceptionSupportsContextData()
     {
         $context = ['key' => 'value', 'nested' => ['data' => true]];
         $exception = new GtrendsException('Test exception message', 0, null, $context);
@@ -30,7 +35,7 @@ class ExceptionTest extends TestCase
     }
 
     /** @test */
-    public function api_exception_stores_http_status_code()
+    public function apiExceptionStoresHttpStatusCode()
     {
         $exception = new ApiException('API error', 404);
 
@@ -40,7 +45,7 @@ class ExceptionTest extends TestCase
     }
 
     /** @test */
-    public function api_exception_includes_response_data_in_context()
+    public function apiExceptionIncludesResponseDataInContext()
     {
         $responseData = ['status' => 'error', 'message' => 'Not found'];
         $exception = new ApiException('API error', 404, null, ['response_data' => $responseData]);
@@ -51,7 +56,7 @@ class ExceptionTest extends TestCase
     }
 
     /** @test */
-    public function configuration_exception_can_be_instantiated()
+    public function configurationExceptionCanBeInstantiated()
     {
         $exception = new ConfigurationException('Missing required config');
 
@@ -60,7 +65,7 @@ class ExceptionTest extends TestCase
     }
 
     /** @test */
-    public function network_exception_can_be_instantiated()
+    public function networkExceptionCanBeInstantiated()
     {
         $exception = new NetworkException('Connection timeout');
 
@@ -69,7 +74,7 @@ class ExceptionTest extends TestCase
     }
 
     /** @test */
-    public function validation_exception_can_be_instantiated()
+    public function validationExceptionCanBeInstantiated()
     {
         $exception = new ValidationException('Invalid parameter');
 
@@ -78,7 +83,7 @@ class ExceptionTest extends TestCase
     }
 
     /** @test */
-    public function validation_exception_stores_field_information()
+    public function validationExceptionStoresFieldInformation()
     {
         $exception = new ValidationException(
             'Invalid parameter',
@@ -86,7 +91,7 @@ class ExceptionTest extends TestCase
             null,
             [
                 'field' => 'region',
-                'reason' => 'Must be a valid ISO 3166-1 alpha-2 code'
+                'reason' => 'Must be a valid ISO 3166-1 alpha-2 code',
             ]
         );
 

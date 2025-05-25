@@ -2,15 +2,20 @@
 
 namespace Gtrends\Sdk\Tests\Unit\Http;
 
-use Gtrends\Sdk\Tests\TestCase;
-use Gtrends\Sdk\Http\ResponseHandler;
-use GuzzleHttp\Psr7\Response;
 use Gtrends\Sdk\Exceptions\ApiException;
+use Gtrends\Sdk\Http\ResponseHandler;
+use Gtrends\Sdk\Tests\TestCase;
+use GuzzleHttp\Psr7\Response;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class ResponseHandlerTest extends TestCase
 {
     /** @test */
-    public function it_extracts_json_data_from_successful_response()
+    public function itExtractsJsonDataFromSuccessfulResponse()
     {
         $fixtureData = $this->loadFixture('trending_success');
         $response = new Response(200, ['Content-Type' => 'application/json'], $fixtureData);
@@ -26,7 +31,7 @@ class ResponseHandlerTest extends TestCase
     }
 
     /** @test */
-    public function it_throws_api_exception_for_error_responses()
+    public function itThrowsApiExceptionForErrorResponses()
     {
         $fixtureData = $this->loadFixture('api_error');
         $response = new Response(400, ['Content-Type' => 'application/json'], $fixtureData);
@@ -39,7 +44,7 @@ class ResponseHandlerTest extends TestCase
     }
 
     /** @test */
-    public function it_throws_api_exception_for_http_error_responses()
+    public function itThrowsApiExceptionForHttpErrorResponses()
     {
         $response = new Response(500, ['Content-Type' => 'text/html'], 'Internal Server Error');
 
@@ -51,7 +56,7 @@ class ResponseHandlerTest extends TestCase
     }
 
     /** @test */
-    public function it_throws_api_exception_for_invalid_json()
+    public function itThrowsApiExceptionForInvalidJson()
     {
         $response = new Response(200, ['Content-Type' => 'application/json'], '{invalid json}');
 
@@ -63,7 +68,7 @@ class ResponseHandlerTest extends TestCase
     }
 
     /** @test */
-    public function it_handles_empty_responses()
+    public function itHandlesEmptyResponses()
     {
         $response = new Response(204);
 
@@ -75,17 +80,17 @@ class ResponseHandlerTest extends TestCase
     }
 
     /** @test */
-    public function it_processes_response_with_nested_data()
+    public function itProcessesResponseWithNestedData()
     {
         $jsonData = json_encode([
             'status' => 'success',
             'data' => [
                 'nested' => [
                     'deeply' => [
-                        'value' => 'test'
-                    ]
-                ]
-            ]
+                        'value' => 'test',
+                    ],
+                ],
+            ],
         ]);
 
         $response = new Response(200, ['Content-Type' => 'application/json'], $jsonData);
@@ -98,12 +103,12 @@ class ResponseHandlerTest extends TestCase
     }
 
     /** @test */
-    public function it_includes_detailed_error_information_in_exceptions()
+    public function itIncludesDetailedErrorInformationInExceptions()
     {
         $fixtureData = json_encode([
             'error' => 'Invalid request parameters',
             'code' => 400,
-            'details' => ['missing' => 'keyword']
+            'details' => ['missing' => 'keyword'],
         ]);
         $response = new Response(400, ['Content-Type' => 'application/json'], $fixtureData);
 

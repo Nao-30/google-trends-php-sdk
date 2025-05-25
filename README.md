@@ -48,20 +48,20 @@ Add the service provider to your `config/app.php` file:
 ```php
 'providers' => [
     // Other service providers...
-    Gtrends\Laravel\GtrendsServiceProvider::class,
+    Gtrends\Sdk\Laravel\GtrendsServiceProvider::class,
 ],
 ```
 
 Publish the configuration:
 
 ```bash
-php artisan vendor:publish --provider="Gtrends\Laravel\GtrendsServiceProvider"
+php artisan vendor:publish --provider="Gtrends\Sdk\Laravel\GtrendsServiceProvider"
 ```
 
 Use the facade in your code:
 
 ```php
-use Gtrends\Laravel\Facades\Gtrends;
+use Gtrends\Sdk\Laravel\Facades\Gtrends;
 
 // Get trending searches
 $trending = Gtrends::getTrending('US');

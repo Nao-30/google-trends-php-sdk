@@ -1,78 +1,43 @@
 <?php
 
+/** @noinspection PhpParamsInspection */
+/** @noinspection PhpParamsInspection */
+/** @noinspection PhpParamsInspection */
+/** @noinspection PhpParamsInspection */
+/** @noinspection PhpParamsInspection */
+/** @noinspection PhpParamsInspection */
+/** @noinspection PhpParamsInspection */
+/** @noinspection PhpParamsInspection */
+/** @noinspection PhpParamsInspection */
+/** @noinspection PhpParamsInspection */
+/** @noinspection PhpParamsInspection */
+/** @noinspection PhpParamsInspection */
+/** @noinspection PhpParamsInspection */
+/** @noinspection PhpParamsInspection */
+
+/** @noinspection PhpParamsInspection */
+
 namespace Gtrends\Sdk\Tests\Integration;
 
-use Gtrends\Sdk\Tests\TestCase;
 use Gtrends\Sdk\Client;
-use Gtrends\Sdk\Configuration\Config;
+use Gtrends\Sdk\Exceptions\ApiException;
+use Gtrends\Sdk\Http\HttpClient;
 use Gtrends\Sdk\Http\RequestBuilder;
 use Gtrends\Sdk\Http\ResponseHandler;
-use Gtrends\Sdk\Http\HttpClient;
-use GuzzleHttp\Handler\MockHandler;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Client as GuzzleClient;
+use Gtrends\Sdk\Tests\TestCase;
 use GuzzleHttp\Psr7\Response;
-use Gtrends\Sdk\Exceptions\ApiException;
-use GuzzleHttp\Psr7\Request;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class ApiWorkflowTest extends TestCase
 {
-    /**
-     * Create a mock HttpClient that returns predetermined responses
-     *
-     * @param array $responses Array of Response objects
-     * @return HttpClient|MockObject
-     */
-    protected function createMockHttpClient(array $responses): MockObject
-    {
-        $mockHttpClient = $this->createMock(HttpClient::class);
-
-        // Configure the mock to return predetermined responses
-        $mockHttpClient->method('sendRequest')
-            ->willReturnCallback(function (RequestInterface $request) use (&$responses) {
-                if (empty($responses)) {
-                    $this->fail('No more mock responses available for request: ' . $request->getUri());
-                }
-                return array_shift($responses);
-            });
-
-        return $mockHttpClient;
-    }
-
-    /**
-     * Set up a client with mock responses
-     *
-     * @param array $mockResponses Array of Response objects
-     * @return Client
-     */
-    protected function setupClientWithMocks(array $mockResponses): Client
-    {
-        // Create test config
-        $config = $this->createConfig(['base_uri' => 'http://localhost:3000/api/']);
-
-        $requestBuilder = new RequestBuilder($config);
-        $responseHandler = new ResponseHandler($config);
-
-        // Create mock HttpClient
-        $mockHttpClient = $this->createMockHttpClient($mockResponses);
-
-        // Create the SDK client
-        $client = new Client($config, $requestBuilder, $responseHandler);
-
-        // Replace the HttpClient with our mock
-        $clientReflection = new \ReflectionClass(Client::class);
-        $httpClientProperty = $clientReflection->getProperty('httpClient');
-        $httpClientProperty->setAccessible(true);
-        $httpClientProperty->setValue($client, $mockHttpClient);
-
-        return $client;
-    }
-
     /** @test */
-    public function it_performs_complete_trending_search_workflow()
+    public function itPerformsCompleteTrendingSearchWorkflow()
     {
         // Create fixture data
         $trendingData = $this->loadFixture('trending_success');
@@ -97,7 +62,7 @@ class ApiWorkflowTest extends TestCase
     }
 
     /** @test */
-    public function it_performs_complete_related_topics_workflow()
+    public function itPerformsCompleteRelatedTopicsWorkflow()
     {
         // Create mock data
         $mockData = [
@@ -110,9 +75,9 @@ class ApiWorkflowTest extends TestCase
                 ],
                 'meta' => [
                     'keyword' => 'php',
-                    'period' => '30d'
-                ]
-            ]
+                    'period' => '30d',
+                ],
+            ],
         ];
 
         // Create mock responses
@@ -136,7 +101,7 @@ class ApiWorkflowTest extends TestCase
     }
 
     /** @test */
-    public function it_handles_error_responses_appropriately()
+    public function itHandlesErrorResponsesAppropriately()
     {
         // Create error data
         $errorData = json_encode([
@@ -146,9 +111,9 @@ class ApiWorkflowTest extends TestCase
                 'message' => 'API request failed',
                 'details' => [
                     'field' => 'region',
-                    'reason' => 'Invalid region code. Must be a valid ISO 3166-1 alpha-2 code.'
-                ]
-            ]
+                    'reason' => 'Invalid region code. Must be a valid ISO 3166-1 alpha-2 code.',
+                ],
+            ],
         ]);
 
         // Create mock responses
@@ -166,7 +131,7 @@ class ApiWorkflowTest extends TestCase
     }
 
     /** @test */
-    public function it_performs_complete_comparison_workflow()
+    public function itPerformsCompleteComparisonWorkflow()
     {
         // Create mock data
         $mockData = [
@@ -178,9 +143,9 @@ class ApiWorkflowTest extends TestCase
                 ],
                 'meta' => [
                     'period' => '90d',
-                    'dates' => ['2023-01-01', '2023-02-01', '2023-03-01', '2023-04-01', '2023-05-01']
-                ]
-            ]
+                    'dates' => ['2023-01-01', '2023-02-01', '2023-03-01', '2023-04-01', '2023-05-01'],
+                ],
+            ],
         ];
 
         // Create mock responses
@@ -202,5 +167,58 @@ class ApiWorkflowTest extends TestCase
         $this->assertCount(2, $result['data']['comparison']);
         $this->assertEquals('php', $result['data']['comparison'][0]['term']);
         $this->assertEquals('javascript', $result['data']['comparison'][1]['term']);
+    }
+
+    /**
+     * Create a mock HttpClient that returns predetermined responses.
+     *
+     * @param array $responses Array of Response objects
+     *
+     * @return HttpClient|MockObject
+     */
+    protected function createMockHttpClient(array $responses): MockObject
+    {
+        $mockHttpClient = $this->createMock(HttpClient::class);
+
+        // Configure the mock to return predetermined responses
+        $mockHttpClient->method('sendRequest')
+            ->willReturnCallback(function (RequestInterface $request) use (&$responses) {
+                if (empty($responses)) {
+                    $this->fail('No more mock responses available for request: '.$request->getUri());
+                }
+
+                return array_shift($responses);
+            })
+        ;
+
+        return $mockHttpClient;
+    }
+
+    /**
+     * Set up a client with mock responses.
+     *
+     * @param array $mockResponses Array of Response objects
+     */
+    protected function setupClientWithMocks(array $mockResponses): Client
+    {
+        // Create test config
+        $config = $this->createConfig(['base_uri' => 'http://localhost:3000/api/']);
+
+        $requestBuilder = new RequestBuilder($config);
+        $responseHandler = new ResponseHandler($config);
+
+        // Create mock HttpClient
+        $mockHttpClient = $this->createMockHttpClient($mockResponses);
+
+        // Create the SDK client
+        $client = new Client($config, $requestBuilder, $responseHandler);
+
+        // Replace the HttpClient with our mock
+        $clientReflection = new \ReflectionClass(Client::class);
+        $httpClientProperty = $clientReflection->getProperty('httpClient');
+        $httpClientProperty->setAccessible(true);
+        $httpClientProperty->setValue($client, $mockHttpClient);
+
+        return $client;
     }
 }

@@ -2,39 +2,21 @@
 
 namespace Gtrends\Sdk\Tests\Laravel;
 
-use Orchestra\Testbench\TestCase;
 use Gtrends\Sdk\Client;
+use Gtrends\Sdk\Configuration\Config;
 use Gtrends\Sdk\Laravel\GtrendsServiceProvider;
+use Illuminate\Foundation\Application;
+use Orchestra\Testbench\TestCase;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class ServiceProviderTest extends TestCase
 {
-    /**
-     * Get package providers.
-     *
-     * @param  \Illuminate\Foundation\Application  $app
-     * @return array<int, class-string>
-     */
-    protected function getPackageProviders($app)
-    {
-        return [
-            GtrendsServiceProvider::class,
-        ];
-    }
-
-    /**
-     * Define environment setup.
-     *
-     * @param  \Illuminate\Foundation\Application  $app
-     * @return void
-     */
-    protected function defineEnvironment($app)
-    {
-        $app['config']->set('gtrends.api_base_uri', 'https://test-api.example.com');
-        $app['config']->set('gtrends.api_timeout', 15);
-    }
-
     /** @test */
-    public function it_registers_client_as_singleton()
+    public function itRegistersClientAsSingleton()
     {
         $client1 = $this->app->make(Client::class);
         $client2 = $this->app->make(Client::class);
@@ -44,7 +26,7 @@ class ServiceProviderTest extends TestCase
     }
 
     /** @test */
-    public function it_loads_config_from_laravel_config()
+    public function itLoadsConfigFromLaravelConfig()
     {
         $client = $this->app->make(Client::class);
 
@@ -57,21 +39,45 @@ class ServiceProviderTest extends TestCase
     }
 
     /** @test */
-    public function it_publishes_config_file()
+    public function itPublishesConfigFile()
     {
         $this->artisan('vendor:publish', [
             '--provider' => GtrendsServiceProvider::class,
-            '--tag' => 'config'
+            '--tag' => 'config',
         ])->assertExitCode(0);
 
         $this->assertFileExists(config_path('gtrends.php'));
     }
 
     /**
-     * Helper method to get config from client using reflection
+     * Get package providers.
      *
-     * @param Client $client
-     * @return \Gtrends\Sdk\Configuration\Config
+     * @param Application $app
+     *
+     * @return array<int, class-string>
+     */
+    protected function getPackageProviders($app)
+    {
+        return [
+            GtrendsServiceProvider::class,
+        ];
+    }
+
+    /**
+     * Define environment setup.
+     *
+     * @param Application $app
+     */
+    protected function defineEnvironment($app)
+    {
+        $app['config']->set('gtrends.api_base_uri', 'https://test-api.example.com');
+        $app['config']->set('gtrends.api_timeout', 15);
+    }
+
+    /**
+     * Helper method to get config from client using reflection.
+     *
+     * @return Config
      */
     private function getClientConfig(Client $client)
     {

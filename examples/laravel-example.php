@@ -9,9 +9,13 @@
 
 namespace App\Http\Controllers;
 
+use Gtrends\Sdk\Exceptions\ApiException;
+use Gtrends\Sdk\Exceptions\GtrendsException;
+use Gtrends\Sdk\Exceptions\ValidationException;
 use Gtrends\Sdk\Contracts\ClientInterface;
 use Gtrends\Sdk\Laravel\Facades\Gtrends;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Cache;
 
@@ -26,9 +30,6 @@ class TrendsController extends Controller
 
     /**
      * Create a new controller instance.
-     *
-     * @param ClientInterface $trendsClient
-     * @return void
      */
     public function __construct(ClientInterface $trendsClient)
     {
@@ -38,8 +39,7 @@ class TrendsController extends Controller
     /**
      * Display trending searches.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(Request $request)
     {
@@ -58,15 +58,14 @@ class TrendsController extends Controller
         return view('trends.index', [
             'trending' => $trending,
             'geo' => $geo,
-            'category' => $category
+            'category' => $category,
         ]);
     }
 
     /**
      * Display related topics for a keyword.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function related(Request $request)
     {
@@ -76,30 +75,29 @@ class TrendsController extends Controller
         $request->validate([
             'keyword' => 'required|string|max:100',
             'geo' => 'nullable|string|size:2',
-            'timeframe' => 'nullable|string|in:past-24h,past-7d,past-30d,past-90d,past-12m,past-5y'
+            'timeframe' => 'nullable|string|in:past-24h,past-7d,past-30d,past-90d,past-12m,past-5y',
         ]);
 
         // Using the facade with caching
-        $cacheKey = 'trends.related.' . md5($keyword . $request->input('geo') . $request->input('timeframe'));
+        $cacheKey = 'trends.related.'.md5($keyword.$request->input('geo').$request->input('timeframe'));
 
         $relatedTopics = Cache::remember($cacheKey, 3600, function () use ($request, $keyword) {
             return Gtrends::getRelatedTopics($keyword, [
                 'geo' => $request->input('geo', config('gtrends.defaults.geo', 'US')),
-                'timeframe' => $request->input('timeframe', config('gtrends.defaults.timeframe', 'past-30d'))
+                'timeframe' => $request->input('timeframe', config('gtrends.defaults.timeframe', 'past-30d')),
             ]);
         });
 
         return view('trends.related', [
             'keyword' => $keyword,
-            'relatedTopics' => $relatedTopics
+            'relatedTopics' => $relatedTopics,
         ]);
     }
 
     /**
      * Display comparison between keywords.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function compare(Request $request)
     {
@@ -107,7 +105,7 @@ class TrendsController extends Controller
         $request->validate([
             'keywords' => 'required|string',
             'geo' => 'nullable|string|size:2',
-            'timeframe' => 'nullable|string|in:past-24h,past-7d,past-30d,past-90d,past-12m,past-5y'
+            'timeframe' => 'nullable|string|in:past-24h,past-7d,past-30d,past-90d,past-12m,past-5y',
         ]);
 
         // Parse keywords
@@ -117,33 +115,32 @@ class TrendsController extends Controller
         // Validate number of keywords
         if (count($keywords) < 2 || count($keywords) > 5) {
             return back()->withErrors([
-                'keywords' => 'Please provide between 2 and 5 keywords to compare.'
+                'keywords' => 'Please provide between 2 and 5 keywords to compare.',
             ]);
         }
 
         try {
             // Using the facade with custom configuration
             $comparison = Gtrends::withConfig([
-                'timeout' => 60 // Extend timeout for comparison requests
+                'timeout' => 60, // Extend timeout for comparison requests
             ])->getComparison($keywords, [
                 'geo' => $request->input('geo', config('gtrends.defaults.geo', 'US')),
-                'timeframe' => $request->input('timeframe', config('gtrends.defaults.timeframe', 'past-30d'))
+                'timeframe' => $request->input('timeframe', config('gtrends.defaults.timeframe', 'past-30d')),
             ]);
 
             return view('trends.comparison', [
                 'keywords' => $keywords,
-                'comparison' => $comparison
+                'comparison' => $comparison,
             ]);
-
-        } catch (\Gtrends\Exceptions\ValidationException $e) {
+        } catch (ValidationException $e) {
             return back()->withErrors([
-                'keywords' => $e->getMessage()
+                'keywords' => $e->getMessage(),
             ]);
-        } catch (\Gtrends\Exceptions\GtrendsException $e) {
+        } catch (GtrendsException $e) {
             report($e); // Log the error
 
             return back()->withErrors([
-                'error' => 'An error occurred while processing your request. Please try again later.'
+                'error' => 'An error occurred while processing your request. Please try again later.',
             ]);
         }
     }
@@ -151,8 +148,7 @@ class TrendsController extends Controller
     /**
      * Display geo interest for a keyword.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function geoInterest(Request $request)
     {
@@ -160,7 +156,7 @@ class TrendsController extends Controller
         $request->validate([
             'keyword' => 'required|string|max:100',
             'resolution' => 'nullable|string|in:country,region,city',
-            'timeframe' => 'nullable|string|in:past-24h,past-7d,past-30d,past-90d,past-12m,past-5y'
+            'timeframe' => 'nullable|string|in:past-24h,past-7d,past-30d,past-90d,past-12m,past-5y',
         ]);
 
         $keyword = $request->input('keyword');
@@ -170,25 +166,24 @@ class TrendsController extends Controller
         try {
             $geoInterest = Gtrends::getGeo($keyword, [
                 'resolution' => $resolution,
-                'timeframe' => $request->input('timeframe', config('gtrends.defaults.timeframe', 'past-30d'))
+                'timeframe' => $request->input('timeframe', config('gtrends.defaults.timeframe', 'past-30d')),
             ]);
 
             return view('trends.geo', [
                 'keyword' => $keyword,
                 'resolution' => $resolution,
-                'geoInterest' => $geoInterest
+                'geoInterest' => $geoInterest,
             ]);
-
-        } catch (\Gtrends\Exceptions\ApiException $e) {
+        } catch (ApiException $e) {
             // Log the API error with context
             logger()->error('Google Trends API error', [
                 'message' => $e->getMessage(),
                 'code' => $e->getCode(),
-                'keyword' => $keyword
+                'keyword' => $keyword,
             ]);
 
             return back()->withErrors([
-                'api' => 'An error occurred with the Google Trends API: ' . $e->getMessage()
+                'api' => 'An error occurred with the Google Trends API: '.$e->getMessage(),
             ]);
         }
     }
@@ -196,7 +191,7 @@ class TrendsController extends Controller
     /**
      * Check API health status.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function healthCheck()
     {
@@ -207,19 +202,18 @@ class TrendsController extends Controller
             return response()->json([
                 'status' => 'success',
                 'message' => 'API is operational',
-                'data' => $health
+                'data' => $health,
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'API health check failed: ' . $e->getMessage()
+                'message' => 'API health check failed: '.$e->getMessage(),
             ], 500);
         }
     }
 }
 
-/**
+/*
  * Example Blade View Template (trends/index.blade.php)
  * @verbatim
  * <div class="container">
