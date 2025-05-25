@@ -1,15 +1,14 @@
 <?php
 
-namespace GtrendsSdk\Contracts;
+namespace Gtrends\Sdk\Contracts;
 
 /**
  * Interface ClientInterface
  *
- * Defines the contract for the main client class of the Google Trends PHP SDK.
- * This interface outlines all the methods that should be implemented for interacting
- * with the Google Trends API endpoints.
+ * Defines the contract for the main client in the Google Trends PHP SDK.
+ * This interface outlines all available methods for interacting with the API endpoints.
  *
- * @package GtrendsSdk\Contracts
+ * @package Gtrends\Sdk\Contracts
  */
 interface ClientInterface
 {
@@ -21,8 +20,8 @@ interface ClientInterface
      * @param bool $includeNews Whether to include related news articles
      * @return array Trending search data
      * 
-     * @throws \GtrendsSdk\Exceptions\ApiException When the API returns an error
-     * @throws \GtrendsSdk\Exceptions\NetworkException When a network error occurs
+     * @throws \Gtrends\Sdk\Exceptions\ApiException When the API returns an error
+     * @throws \Gtrends\Sdk\Exceptions\NetworkException When a network error occurs
      */
     public function trending(?string $region = null, int $limit = 10, bool $includeNews = false): array;
     
@@ -35,8 +34,8 @@ interface ClientInterface
      * @param string $category Category ID to filter results
      * @return array Related topics data
      * 
-     * @throws \GtrendsSdk\Exceptions\ApiException When the API returns an error
-     * @throws \GtrendsSdk\Exceptions\NetworkException When a network error occurs
+     * @throws \Gtrends\Sdk\Exceptions\ApiException When the API returns an error
+     * @throws \Gtrends\Sdk\Exceptions\NetworkException When a network error occurs
      */
     public function relatedTopics(string $topic, ?string $region = null, string $timeframe = 'today 3-m', string $category = '0'): array;
     
@@ -49,8 +48,8 @@ interface ClientInterface
      * @param string $category Category ID to filter results
      * @return array Related queries data
      * 
-     * @throws \GtrendsSdk\Exceptions\ApiException When the API returns an error
-     * @throws \GtrendsSdk\Exceptions\NetworkException When a network error occurs
+     * @throws \Gtrends\Sdk\Exceptions\ApiException When the API returns an error
+     * @throws \Gtrends\Sdk\Exceptions\NetworkException When a network error occurs
      */
     public function relatedQueries(string $topic, ?string $region = null, string $timeframe = 'today 3-m', string $category = '0'): array;
     
@@ -63,9 +62,9 @@ interface ClientInterface
      * @param string $category Category ID to filter results
      * @return array Comparison data
      * 
-     * @throws \GtrendsSdk\Exceptions\ApiException When the API returns an error
-     * @throws \GtrendsSdk\Exceptions\NetworkException When a network error occurs
-     * @throws \GtrendsSdk\Exceptions\ValidationException When invalid parameters are provided
+     * @throws \Gtrends\Sdk\Exceptions\ApiException When the API returns an error
+     * @throws \Gtrends\Sdk\Exceptions\NetworkException When a network error occurs
+     * @throws \Gtrends\Sdk\Exceptions\ValidationException When invalid parameters are provided
      */
     public function compare(array $topics, ?string $region = null, string $timeframe = 'today 3-m', string $category = '0'): array;
     
@@ -77,8 +76,8 @@ interface ClientInterface
      * @param string $contentType Type of content suggestions to return
      * @return array Suggestions data
      * 
-     * @throws \GtrendsSdk\Exceptions\ApiException When the API returns an error
-     * @throws \GtrendsSdk\Exceptions\NetworkException When a network error occurs
+     * @throws \Gtrends\Sdk\Exceptions\ApiException When the API returns an error
+     * @throws \Gtrends\Sdk\Exceptions\NetworkException When a network error occurs
      */
     public function suggestions(string $query, ?string $region = null, string $contentType = 'all'): array;
     
@@ -90,8 +89,8 @@ interface ClientInterface
      * @param int $count Number of opportunities to return
      * @return array Opportunities data
      * 
-     * @throws \GtrendsSdk\Exceptions\ApiException When the API returns an error
-     * @throws \GtrendsSdk\Exceptions\NetworkException When a network error occurs
+     * @throws \Gtrends\Sdk\Exceptions\ApiException When the API returns an error
+     * @throws \Gtrends\Sdk\Exceptions\NetworkException When a network error occurs
      */
     public function opportunities(string $niche, ?string $region = null, int $count = 10): array;
     
@@ -102,8 +101,8 @@ interface ClientInterface
      * @param string $timeframe Time range for data (e.g., 'today 12-m', 'today 5-y')
      * @return array Growth pattern data
      * 
-     * @throws \GtrendsSdk\Exceptions\ApiException When the API returns an error
-     * @throws \GtrendsSdk\Exceptions\NetworkException When a network error occurs
+     * @throws \Gtrends\Sdk\Exceptions\ApiException When the API returns an error
+     * @throws \Gtrends\Sdk\Exceptions\NetworkException When a network error occurs
      */
     public function growth(string $query, string $timeframe = 'today 12-m'): array;
     
@@ -118,8 +117,8 @@ interface ClientInterface
      * @param int $count Number of regions to display
      * @return array Geographic interest data
      * 
-     * @throws \GtrendsSdk\Exceptions\ApiException When the API returns an error
-     * @throws \GtrendsSdk\Exceptions\NetworkException When a network error occurs
+     * @throws \Gtrends\Sdk\Exceptions\ApiException When the API returns an error
+     * @throws \Gtrends\Sdk\Exceptions\NetworkException When a network error occurs
      */
     public function geo(string $query, ?string $region = null, string $resolution = 'COUNTRY', string $timeframe = 'today 12-m', string $category = '0', int $count = 20): array;
     
@@ -128,7 +127,7 @@ interface ClientInterface
      *
      * @return array Health check data
      * 
-     * @throws \GtrendsSdk\Exceptions\NetworkException When a network error occurs
+     * @throws \Gtrends\Sdk\Exceptions\NetworkException When a network error occurs
      */
     public function health(): array;
     
@@ -146,7 +145,7 @@ interface ClientInterface
      * @param mixed $value Configuration value
      * @return self
      * 
-     * @throws \GtrendsSdk\Exceptions\ConfigurationException When the configuration key is invalid
+     * @throws \Gtrends\Sdk\Exceptions\ConfigurationException When the configuration key is invalid
      */
     public function setConfig(string $key, $value): self;
 } 

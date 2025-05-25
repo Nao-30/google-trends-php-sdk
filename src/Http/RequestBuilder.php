@@ -1,11 +1,11 @@
 <?php
 
-namespace GtrendsSdk\Http;
+namespace Gtrends\Sdk\Http;
 
-use GtrendsSdk\Client;
-use GtrendsSdk\Contracts\ConfigurationInterface;
-use GtrendsSdk\Contracts\RequestBuilderInterface;
-use GtrendsSdk\Exceptions\ValidationException;
+use Gtrends\Sdk\Client;
+use Gtrends\Sdk\Contracts\ConfigurationInterface;
+use Gtrends\Sdk\Contracts\RequestBuilderInterface;
+use Gtrends\Sdk\Exceptions\ValidationException;
 use GuzzleHttp\Psr7\Request;
 use Psr\Http\Message\RequestInterface;
 
@@ -14,7 +14,7 @@ use Psr\Http\Message\RequestInterface;
  * 
  * Implements the RequestBuilderInterface for building HTTP requests to the Google Trends API.
  * 
- * @package GtrendsSdk\Http
+ * @package Gtrends\Sdk\Http
  */
 class RequestBuilder implements RequestBuilderInterface
 {
@@ -166,6 +166,8 @@ class RequestBuilder implements RequestBuilderInterface
         if (!empty($errors)) {
             throw new ValidationException(
                 'Validation failed for request parameters', 
+                400,
+                null,
                 ['errors' => $errors]
             );
         }

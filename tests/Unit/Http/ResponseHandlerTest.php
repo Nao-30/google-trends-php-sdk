@@ -5,7 +5,7 @@ namespace Gtrends\Sdk\Tests\Unit\Http;
 use Gtrends\Sdk\Tests\TestCase;
 use Gtrends\Sdk\Http\ResponseHandler;
 use GuzzleHttp\Psr7\Response;
-use Gtrends\Exceptions\ApiException;
+use Gtrends\Sdk\Exceptions\ApiException;
 
 class ResponseHandlerTest extends TestCase
 {
@@ -15,8 +15,9 @@ class ResponseHandlerTest extends TestCase
         $fixtureData = $this->loadFixture('trending_success');
         $response = new Response(200, ['Content-Type' => 'application/json'], $fixtureData);
         
-        $handler = new ResponseHandler();
-        $result = $handler->handle($response);
+        $config = $this->createConfig();
+        $handler = new ResponseHandler($config);
+        $result = $handler->processResponse($response);
         
         $this->assertIsArray($result);
         $this->assertArrayHasKey('status', $result);
@@ -30,10 +31,11 @@ class ResponseHandlerTest extends TestCase
         $fixtureData = $this->loadFixture('api_error');
         $response = new Response(400, ['Content-Type' => 'application/json'], $fixtureData);
         
-        $handler = new ResponseHandler();
+        $config = $this->createConfig();
+        $handler = new ResponseHandler($config);
         
         $this->expectException(ApiException::class);
-        $handler->handle($response);
+        $handler->processResponse($response);
     }
     
     /** @test */
@@ -41,10 +43,11 @@ class ResponseHandlerTest extends TestCase
     {
         $response = new Response(500, ['Content-Type' => 'text/html'], 'Internal Server Error');
         
-        $handler = new ResponseHandler();
+        $config = $this->createConfig();
+        $handler = new ResponseHandler($config);
         
         $this->expectException(ApiException::class);
-        $handler->handle($response);
+        $handler->processResponse($response);
     }
     
     /** @test */
@@ -52,10 +55,11 @@ class ResponseHandlerTest extends TestCase
     {
         $response = new Response(200, ['Content-Type' => 'application/json'], '{invalid json}');
         
-        $handler = new ResponseHandler();
+        $config = $this->createConfig();
+        $handler = new ResponseHandler($config);
         
         $this->expectException(ApiException::class);
-        $handler->handle($response);
+        $handler->processResponse($response);
     }
     
     /** @test */
@@ -63,8 +67,9 @@ class ResponseHandlerTest extends TestCase
     {
         $response = new Response(204);
         
-        $handler = new ResponseHandler();
-        $result = $handler->handle($response);
+        $config = $this->createConfig();
+        $handler = new ResponseHandler($config);
+        $result = $handler->processResponse($response);
         
         $this->assertEmpty($result);
     }
@@ -85,8 +90,9 @@ class ResponseHandlerTest extends TestCase
         
         $response = new Response(200, ['Content-Type' => 'application/json'], $jsonData);
         
-        $handler = new ResponseHandler();
-        $result = $handler->handle($response);
+        $config = $this->createConfig();
+        $handler = new ResponseHandler($config);
+        $result = $handler->processResponse($response);
         
         $this->assertEquals('test', $result['data']['nested']['deeply']['value']);
     }
@@ -94,23 +100,28 @@ class ResponseHandlerTest extends TestCase
     /** @test */
     public function it_includes_detailed_error_information_in_exceptions()
     {
-        $fixtureData = $this->loadFixture('api_error');
+        $fixtureData = json_encode([
+            'error' => 'Invalid request parameters',
+            'code' => 400,
+            'details' => ['missing' => 'keyword']
+        ]);
         $response = new Response(400, ['Content-Type' => 'application/json'], $fixtureData);
         
-        $handler = new ResponseHandler();
+        $config = $this->createConfig();
+        $handler = new ResponseHandler($config);
         
         try {
-            $handler->handle($response);
+            $handler->processResponse($response);
             $this->fail('Expected ApiException was not thrown');
         } catch (ApiException $e) {
             $this->assertEquals(400, $e->getCode());
             $this->assertStringContainsString('Invalid request parameters', $e->getMessage());
             
-            // Check that context information was included
-            $context = $e->getContext();
-            $this->assertIsArray($context);
-            $this->assertArrayHasKey('response_body', $context);
-            $this->assertArrayHasKey('http_status', $context);
+            // Check that response data was included
+            $this->assertEquals(400, $e->getStatusCode());
+            $responseData = $e->getResponseData();
+            $this->assertNotNull($responseData);
+            $this->assertArrayHasKey('details', $responseData);
         }
     }
 } 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Gtrends\Exceptions;
+namespace Gtrends\Sdk\Exceptions;
 
 use Exception;
 

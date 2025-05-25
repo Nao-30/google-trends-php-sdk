@@ -32,7 +32,7 @@ composer require gtrends/gtrends-php-sdk
 
 require 'vendor/autoload.php';
 
-$client = new Gtrends\Client([
+$client = new Gtrends\Sdk\Client([
     'base_uri' => 'https://trends-api-url.com',
     'timeout' => 30
 ]);
