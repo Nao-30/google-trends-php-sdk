@@ -176,7 +176,7 @@ class ApiWorkflowTest extends TestCase
      *
      * @param array $responses Array of Response objects
      *
-     * @return HttpClient|MockObject
+     * @return MockObject
      * @throws Exception
      * @throws Exception
      */

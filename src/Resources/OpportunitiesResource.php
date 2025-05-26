@@ -86,7 +86,9 @@ class OpportunitiesResource
         if (empty($niche)) {
             throw new ValidationException(
                 'Niche cannot be empty',
-                0, null, ['parameter' => 'niche', 'value' => $niche]
+                0,
+                null,
+                ['parameter' => 'niche', 'value' => $niche]
             );
         }
 
@@ -94,7 +96,9 @@ class OpportunitiesResource
         if ($region !== null && !preg_match('/^[A-Z]{2}$/', $region)) {
             throw new ValidationException(
                 'Region must be a valid two-letter country code',
-                0, null, ['parameter' => 'region', 'value' => $region]
+                0,
+                null,
+                ['parameter' => 'region', 'value' => $region]
             );
         }
 
@@ -102,7 +106,9 @@ class OpportunitiesResource
         if ($count < 1 || $count > 50) {
             throw new ValidationException(
                 'Count must be between 1 and 50',
-                0, null, ['parameter' => 'count', 'value' => $count]
+                0,
+                null,
+                ['parameter' => 'count', 'value' => $count]
             );
         }
 

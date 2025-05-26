@@ -78,6 +78,16 @@ jobs:
             laravel-version: '12.*'
           - php-version: '8.1'
             laravel-version: '12.*'
+
+          # Laravel 10 requires PHP ^8.1
+          - php-version: '8.0'
+            laravel-version: '10.*'
+
+          # Laravel 11 requires PHP ^8.2
+          - php-version: '8.0'
+            laravel-version: '11.*'
+          - php-version: '8.1'
+            laravel-version: '11.*'
     
     steps:
       - name: Checkout code

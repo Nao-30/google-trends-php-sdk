@@ -27,6 +27,7 @@ class FacadeTest extends TestCase
     {
         // Mock the client
         $mock = $this->mock(Client::class);
+        // @phpstan-ignore-next-line
         $mock->shouldReceive('trending')
             ->once()
             ->with('US')
@@ -48,18 +49,21 @@ class FacadeTest extends TestCase
         // Mock the client
         $mock = $this->mock(Client::class);
 
+        // @phpstan-ignore-next-line
         $mock->shouldReceive('relatedTopics')
             ->once()
             ->with('php')
             ->andReturn(['status' => 'success'])
         ;
 
+        // @phpstan-ignore-next-line
         $mock->shouldReceive('relatedQueries')
             ->once()
             ->with('php')
             ->andReturn(['status' => 'success'])
         ;
 
+        // @phpstan-ignore-next-line
         $mock->shouldReceive('compare')
             ->once()
             ->with(['php', 'javascript'])

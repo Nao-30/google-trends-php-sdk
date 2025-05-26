@@ -58,7 +58,7 @@ class ClientTest extends TestCase
             $this->requestBuilder,
             $this->responseHandler
         );
-        true;
+        $this->assertInstanceOf(Client::class, $client);
     }
 
     /** @test */

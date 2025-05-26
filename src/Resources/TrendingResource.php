@@ -86,7 +86,9 @@ class TrendingResource
         if ($limit < 1 || $limit > 100) {
             throw new ValidationException(
                 'Limit must be between 1 and 100',
-                0, null, ['parameter' => 'limit', 'value' => $limit]
+                0,
+                null,
+                ['parameter' => 'limit', 'value' => $limit]
             );
         }
 
@@ -94,7 +96,9 @@ class TrendingResource
         if ($region !== null && !preg_match('/^[A-Z]{2}$/', $region)) {
             throw new ValidationException(
                 'Region must be a valid two-letter country code',
-                0, null, ['parameter' => 'region', 'value' => $region]
+                0,
+                null,
+                ['parameter' => 'region', 'value' => $region]
             );
         }
 
