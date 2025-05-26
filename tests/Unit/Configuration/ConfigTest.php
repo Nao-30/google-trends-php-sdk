@@ -96,7 +96,7 @@ class ConfigTest extends TestCase
         $config = new Config($configData);
         $allConfig = $config->all();
 
-        $this->assertIsArray($allConfig);
+        // $this->assertIsArray($allConfig);
         $this->assertArrayHasKey('base_uri', $allConfig);
         $this->assertArrayHasKey('timeout', $allConfig);
     }

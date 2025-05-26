@@ -43,7 +43,7 @@ class ServiceProviderTest extends TestCase
     {
         $this->artisan('vendor:publish', [
             '--provider' => GtrendsServiceProvider::class,
-            '--tag' => 'config',
+            '--tag' => 'gtrends-config',
         ])->assertExitCode(0);
 
         $this->assertFileExists(config_path('gtrends.php'));
@@ -56,7 +56,7 @@ class ServiceProviderTest extends TestCase
      *
      * @return array<int, class-string>
      */
-    protected function getPackageProviders($app): array: array
+    protected function getPackageProviders($app): array
     {
         return [
             GtrendsServiceProvider::class,
@@ -79,7 +79,7 @@ class ServiceProviderTest extends TestCase
      *
      * @return Config
      */
-    private function getClientConfig(Client $client): Config: Config
+    private function getClientConfig(Client $client): Config
     {
         $reflection = new \ReflectionClass($client);
         $property = $reflection->getProperty('config');

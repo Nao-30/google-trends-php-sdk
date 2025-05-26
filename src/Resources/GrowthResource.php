@@ -85,7 +85,7 @@ class GrowthResource
         if (empty($query)) {
             throw new ValidationException(
                 'Query cannot be empty',
-                ['parameter' => 'query', 'value' => $query]
+                0, null, ['parameter' => 'query', 'value' => $query]
             );
         }
 
@@ -94,7 +94,7 @@ class GrowthResource
         if (!in_array($timeframe, $validTimeframes)) {
             throw new ValidationException(
                 'Timeframe must be one of: ' . implode(', ', $validTimeframes),
-                ['parameter' => 'timeframe', 'value' => $timeframe]
+                0, null, ['parameter' => 'timeframe', 'value' => $timeframe]
             );
         }
 

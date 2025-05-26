@@ -86,7 +86,7 @@ class SuggestionsResource
         if (empty($query)) {
             throw new ValidationException(
                 'Query cannot be empty',
-                ['parameter' => 'query', 'value' => $query]
+                0, null, ['parameter' => 'query', 'value' => $query]
             );
         }
 
@@ -94,7 +94,7 @@ class SuggestionsResource
         if ($region !== null && !preg_match('/^[A-Z]{2}$/', $region)) {
             throw new ValidationException(
                 'Region must be a valid two-letter country code',
-                ['parameter' => 'region', 'value' => $region]
+                0, null, ['parameter' => 'region', 'value' => $region]
             );
         }
 
@@ -103,7 +103,7 @@ class SuggestionsResource
         if (!in_array($contentType, $validContentTypes)) {
             throw new ValidationException(
                 'Content type must be one of: ' . implode(', ', $validContentTypes),
-                ['parameter' => 'contentType', 'value' => $contentType]
+                0, null, ['parameter' => 'contentType', 'value' => $contentType]
             );
         }
 

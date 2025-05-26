@@ -27,16 +27,16 @@ class FacadeTest extends TestCase
     {
         // Mock the client
         $mock = $this->mock(Client::class);
-        $mock->shouldReceive('getTrending')
+        $mock->shouldReceive('trending')
             ->once()
-            ->with(['region' => 'US'])
+            ->with('US')
             ->andReturn(['status' => 'success', 'data' => []])
         ;
 
         $this->app->instance(Client::class, $mock);
 
         // Call facade method
-        $result = Gtrends::trending(['region' => 'US']);
+        $result = Gtrends::trending('US');
 
         // Verify result
         $this->assertEquals(['status' => 'success', 'data' => []], $result);
@@ -48,30 +48,30 @@ class FacadeTest extends TestCase
         // Mock the client
         $mock = $this->mock(Client::class);
 
-        $mock->shouldReceive('getRelatedTopics')
+        $mock->shouldReceive('relatedTopics')
             ->once()
-            ->with(['keyword' => 'php'])
+            ->with('php')
             ->andReturn(['status' => 'success'])
         ;
 
-        $mock->shouldReceive('getRelatedQueries')
+        $mock->shouldReceive('relatedQueries')
             ->once()
-            ->with(['keyword' => 'php'])
+            ->with('php')
             ->andReturn(['status' => 'success'])
         ;
 
-        $mock->shouldReceive('getComparison')
+        $mock->shouldReceive('compare')
             ->once()
-            ->with(['topics' => ['php', 'javascript']])
+            ->with(['php', 'javascript'])
             ->andReturn(['status' => 'success'])
         ;
 
         $this->app->instance(Client::class, $mock);
 
         // Call facade methods
-        $result1 = Gtrends::related(['keyword' => 'php']);
-        $result2 = Gtrends::related(['keyword' => 'php']);
-        $result3 = Gtrends::comparison(['topics' => ['php', 'javascript']]);
+        $result1 = Gtrends::relatedTopics('php');
+        $result2 = Gtrends::relatedQueries('php');
+        $result3 = Gtrends::compare(['php', 'javascript']);
 
         // Verify results
         $this->assertEquals(['status' => 'success'], $result1);
@@ -86,7 +86,7 @@ class FacadeTest extends TestCase
      *
      * @return array<int, class-string>
      */
-    protected function getPackageProviders($app): array: array
+    protected function getPackageProviders($app): array
     {
         return [
             GtrendsServiceProvider::class,
@@ -100,7 +100,7 @@ class FacadeTest extends TestCase
      *
      * @return array<string, class-string>
      */
-    protected function getPackageAliases($app): array: array
+    protected function getPackageAliases($app): array
     {
         return [
             'Gtrends' => Gtrends::class,
