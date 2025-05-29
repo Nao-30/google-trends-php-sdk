@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1748224564">
-  <project timestamp="1748224564">
+<coverage generated="1748242554">
+  <project timestamp="1748242554">
     <file name="/app/src/Client.php">
       <class name="Gtrends\Sdk\Client" namespace="global">
         <metrics complexity="28" methods="13" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="110" coveredstatements="0" elements="123" coveredelements="0"/>
