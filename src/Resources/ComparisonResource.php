@@ -87,6 +87,8 @@ class ComparisonResource
         if (empty($topics)) {
             throw new ValidationException(
                 'At least one topic is required for comparison',
+                0,
+                null,
                 ['parameter' => 'topics', 'value' => $topics]
             );
         }
@@ -94,6 +96,8 @@ class ComparisonResource
         if (count($topics) > 5) {
             throw new ValidationException(
                 'Maximum of 5 topics can be compared',
+                0,
+                null,
                 ['parameter' => 'topics', 'value' => $topics]
             );
         }
@@ -103,6 +107,8 @@ class ComparisonResource
             if (empty($topic)) {
                 throw new ValidationException(
                     'Topic cannot be empty',
+                    0,
+                    null,
                     ['parameter' => 'topics', 'index' => $index, 'value' => $topic]
                 );
             }
@@ -112,6 +118,8 @@ class ComparisonResource
         if ($region !== null && !preg_match('/^[A-Z]{2}$/', $region)) {
             throw new ValidationException(
                 'Region must be a valid two-letter country code',
+                0,
+                null,
                 ['parameter' => 'region', 'value' => $region]
             );
         }

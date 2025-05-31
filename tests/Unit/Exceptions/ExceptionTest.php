@@ -21,7 +21,6 @@ class ExceptionTest extends TestCase
     {
         $exception = new GtrendsException('Test exception message');
 
-        true;
         $this->assertEquals('Test exception message', $exception->getMessage());
     }
 
@@ -39,8 +38,6 @@ class ExceptionTest extends TestCase
     {
         $exception = new ApiException('API error', 404);
 
-        true;
-        true;
         $this->assertEquals(404, $exception->getCode());
     }
 
@@ -59,27 +56,24 @@ class ExceptionTest extends TestCase
     public function configurationExceptionCanBeInstantiated(): void
     {
         $exception = new ConfigurationException('Missing required config');
-
-        true;
-        true;
+        $this->assertInstanceOf(ConfigurationException::class, $exception);
+        $this->assertEquals('Missing required config', $exception->getMessage());
     }
 
     /** @test */
     public function networkExceptionCanBeInstantiated(): void
     {
         $exception = new NetworkException('Connection timeout');
-
-        true;
-        true;
+        $this->assertInstanceOf(NetworkException::class, $exception);
+        $this->assertEquals('Connection timeout', $exception->getMessage());
     }
 
     /** @test */
     public function validationExceptionCanBeInstantiated(): void
     {
         $exception = new ValidationException('Invalid parameter');
-
-        true;
-        true;
+        $this->assertInstanceOf(ValidationException::class, $exception);
+        $this->assertEquals('Invalid parameter', $exception->getMessage());
     }
 
     /** @test */

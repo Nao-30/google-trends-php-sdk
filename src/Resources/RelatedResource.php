@@ -87,6 +87,8 @@ class RelatedResource
         if (empty($topic)) {
             throw new ValidationException(
                 'Topic cannot be empty',
+                0,
+                null,
                 ['parameter' => 'topic', 'value' => $topic]
             );
         }
@@ -95,6 +97,8 @@ class RelatedResource
         if ($region !== null && !preg_match('/^[A-Z]{2}$/', $region)) {
             throw new ValidationException(
                 'Region must be a valid two-letter country code',
+                0,
+                null,
                 ['parameter' => 'region', 'value' => $region]
             );
         }
@@ -143,6 +147,8 @@ class RelatedResource
         if (empty($topic)) {
             throw new ValidationException(
                 'Topic cannot be empty',
+                0,
+                null,
                 ['parameter' => 'topic', 'value' => $topic]
             );
         }
@@ -151,6 +157,8 @@ class RelatedResource
         if ($region !== null && !preg_match('/^[A-Z]{2}$/', $region)) {
             throw new ValidationException(
                 'Region must be a valid two-letter country code',
+                0,
+                null,
                 ['parameter' => 'region', 'value' => $region]
             );
         }
@@ -212,8 +220,8 @@ class RelatedResource
         } elseif (isset($data['rising']) && isset($data['top'])) {
             // Some APIs separate top and rising results
             $formatted[$responseKey] = [
-                'rising' => $data['rising'] ?? [],
-                'top' => $data['top'] ?? []
+                'rising' => $data['rising'],
+                'top' => $data['top']
             ];
         } else {
             // If we can't determine the structure, use the raw data

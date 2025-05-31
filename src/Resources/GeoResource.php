@@ -95,6 +95,8 @@ class GeoResource
         if (empty($query)) {
             throw new ValidationException(
                 'Query cannot be empty',
+                0,
+                null,
                 ['parameter' => 'query', 'value' => $query]
             );
         }
@@ -103,6 +105,8 @@ class GeoResource
         if ($region !== null && !preg_match('/^[A-Z]{2}$/', $region)) {
             throw new ValidationException(
                 'Region must be a valid two-letter country code',
+                0,
+                null,
                 ['parameter' => 'region', 'value' => $region]
             );
         }
@@ -112,6 +116,8 @@ class GeoResource
         if (!in_array(strtoupper($resolution), $validResolutions)) {
             throw new ValidationException(
                 'Resolution must be one of: ' . implode(', ', $validResolutions),
+                0,
+                null,
                 ['parameter' => 'resolution', 'value' => $resolution]
             );
         }
@@ -120,6 +126,8 @@ class GeoResource
         if ($count < 1 || $count > 100) {
             throw new ValidationException(
                 'Count must be between 1 and 100',
+                0,
+                null,
                 ['parameter' => 'count', 'value' => $count]
             );
         }

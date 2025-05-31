@@ -30,14 +30,9 @@ class HttpClient
     protected GuzzleClient $client;
 
     /**
-     * @var Config The SDK configuration
+     * @var ConfigurationInterface The SDK configuration
      */
-    protected Config $config;
-
-    /**
-     * @var Config The SDK configuration
-     */
-    protected Config $configuration;
+    protected ConfigurationInterface $config;
 
     /**
      * @var LoggerInterface The logger instance
@@ -47,10 +42,10 @@ class HttpClient
     /**
      * HttpClient constructor.
      *
-     * @param Config $configuration The SDK configuration
+     * @param ConfigurationInterface $configuration The SDK configuration
      * @param LoggerInterface|null $logger The logger instance (optional)
      */
-    public function __construct(Config $configuration, ?LoggerInterface $logger = null)
+    public function __construct(ConfigurationInterface $configuration, ?LoggerInterface $logger = null)
     {
         $this->config = $configuration;
         $this->logger = $logger ?? new NullLogger();
@@ -70,7 +65,7 @@ class HttpClient
         }
 
         // Add logging middleware if debug mode is enabled
-        if ($this->config->isDebugMode()) {
+        if ($this->config->isDebugEnabled()) {
             $stack->push($this->createLoggingMiddleware());
         }
 

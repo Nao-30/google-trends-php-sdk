@@ -125,4 +125,14 @@ interface ConfigurationInterface
      * @return bool True if real HTTP requests are enabled
      */
     public function shouldMakeRealRequests(): bool;
+
+    public function getApiBaseUrl(): string;
+
+    public function getApiKey(): ?string;
+
+    public function getMaxRetries(): int;
+
+    public function getConnectTimeout(): int;
+
+    public function shouldVerifySsl(): bool;
 }
