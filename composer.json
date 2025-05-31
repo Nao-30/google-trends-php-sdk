@@ -1,5 +1,5 @@
 {
-    "name": "gtrends/php-sdk",
+    "name": "nao-30/gtrends-php-sdk",
     "description": "A professional PHP SDK for the Google Trends CLI API",
     "type": "library",
     "license": "MIT",
