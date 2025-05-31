@@ -26,7 +26,7 @@ jobs:
         uses: symfonycorp/security-checker-action@v5
 
       - name: PHP Security Checker
-        uses: StephaneBour/actions-php-security-checker@1.1
+        uses: StephaneBour/actions-php-security-checker@1.2
         with:
           composer-lock: './composer.lock'
 
