@@ -17,7 +17,7 @@ Develop the following maintenance and future planning components:
 ### Version Support Policy
 
 Establish a clear policy that defines:
-- Which PHP versions will be supported (7.4+, 8.x)
+- Which PHP versions will be supported (8.x)
 - How long each SDK version will be maintained
 - When security updates will be provided
 - Deprecation timeline for features

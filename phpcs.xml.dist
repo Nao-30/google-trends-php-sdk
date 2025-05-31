@@ -24,4 +24,13 @@
     <exclude-pattern>node_modules/*</exclude-pattern>
     <exclude-pattern>*.js</exclude-pattern>
     <exclude-pattern>*.css</exclude-pattern>
+
+    <rule ref="Generic.Files.LineLength">
+        <!-- hard limit (errors) -->
+        <properties>
+            <property name="lineLimit" value="210"/>
+            <!-- disable “absolute” fatal limit so nothing errors past 0 -->
+            <property name="absoluteLineLimit" value="0"/>
+        </properties>
+    </rule>
 </ruleset> 

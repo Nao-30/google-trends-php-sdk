@@ -1,6 +1,6 @@
 <?php
 
-namespace GtrendsSdk\Contracts;
+namespace Gtrends\Sdk\Contracts;
 
 use Psr\Http\Message\RequestInterface;
 
@@ -10,7 +10,7 @@ use Psr\Http\Message\RequestInterface;
  * Defines the contract for building HTTP requests in the Google Trends PHP SDK.
  * This interface outlines methods for constructing and configuring HTTP requests.
  *
- * @package GtrendsSdk\Contracts
+ * @package Gtrends\Sdk\Contracts
  */
 interface RequestBuilderInterface
 {
@@ -21,11 +21,11 @@ interface RequestBuilderInterface
      * @param array $queryParams Query parameters
      * @param array $headers HTTP headers
      * @return RequestInterface PSR-7 Request object
-     * 
-     * @throws \GtrendsSdk\Exceptions\ValidationException When the parameters are invalid
+     *
+     * @throws \Gtrends\Sdk\Exceptions\ValidationException When the parameters are invalid
      */
     public function createGetRequest(string $endpoint, array $queryParams = [], array $headers = []): RequestInterface;
-    
+
     /**
      * Create a new POST request.
      *
@@ -33,11 +33,11 @@ interface RequestBuilderInterface
      * @param array $data Request body data
      * @param array $headers HTTP headers
      * @return RequestInterface PSR-7 Request object
-     * 
-     * @throws \GtrendsSdk\Exceptions\ValidationException When the parameters are invalid
+     *
+     * @throws \Gtrends\Sdk\Exceptions\ValidationException When the parameters are invalid
      */
     public function createPostRequest(string $endpoint, array $data = [], array $headers = []): RequestInterface;
-    
+
     /**
      * Build the full URL for an API endpoint.
      *
@@ -45,7 +45,7 @@ interface RequestBuilderInterface
      * @return string Full URL
      */
     public function buildUrl(string $endpoint): string;
-    
+
     /**
      * Add query parameters to a URL.
      *
@@ -54,7 +54,7 @@ interface RequestBuilderInterface
      * @return string URL with query parameters
      */
     public function addQueryParams(string $url, array $params): string;
-    
+
     /**
      * Merge default headers with custom headers.
      *
@@ -62,25 +62,25 @@ interface RequestBuilderInterface
      * @return array Merged headers
      */
     public function mergeHeaders(array $headers): array;
-    
+
     /**
      * Validate request parameters.
      *
      * @param array $params Parameters to validate
      * @param array $rules Validation rules
      * @return bool True if valid, false otherwise
-     * 
-     * @throws \GtrendsSdk\Exceptions\ValidationException When the parameters are invalid
+     *
+     * @throws \Gtrends\Sdk\Exceptions\ValidationException When the parameters are invalid
      */
     public function validateParams(array $params, array $rules): bool;
-    
+
     /**
      * Get the configuration used by the request builder.
      *
      * @return ConfigurationInterface
      */
     public function getConfig(): ConfigurationInterface;
-    
+
     /**
      * Set the configuration for the request builder.
      *
@@ -88,4 +88,4 @@ interface RequestBuilderInterface
      * @return self
      */
     public function setConfig(ConfigurationInterface $config): self;
-} 
+}

@@ -1,0 +1,82 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  build:
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.0'
+          extensions: mbstring, xml, ctype, iconv, json, pdo, curl
+          tools: composer:v2
+
+      - name: Validate tag format
+        run: |
+          if [[ ! ${{ github.ref_name }} =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Invalid tag format. Must be vX.Y.Z"
+            exit 1
+          fi
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-dev --optimize-autoloader
+
+      - name: Generate changelog
+        id: changelog
+        uses: metcalfc/changelog-generator@v4.1.0
+        with:
+          myToken: ${{ secrets.GITHUB_TOKEN }}
+          base-ref: 'v0.1.0'
+          head-ref: ${{ github.ref }}
+
+      - name: Create package
+        run: |
+          mkdir -p build
+          zip -r build/gtrends-sdk-${{ github.ref_name }}.zip . -x "*.git*" ".github/*" "tests/*" "build/*"
+
+      - name: Create release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          name: Release ${{ github.ref_name }}
+          body: |
+            ## Gtrends PHP SDK ${{ github.ref_name }}
+            
+            ${{ steps.changelog.outputs.changelog }}
+            
+            ## Installation
+            
+            ```bash
+            composer require gtrends/sdk
+            ```
+          files: |
+            build/gtrends-sdk-${{ github.ref_name }}.zip
+          draft: false
+          prerelease: false
+
+  publish:
+    name: Publish to Packagist
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Trigger Packagist webhook
+        uses: distributhor/workflow-webhook@v3
+        env:
+          webhook_url: ${{ secrets.PACKAGIST_WEBHOOK }}
+          webhook_secret: ${{ secrets.PACKAGIST_TOKEN }}
+          data: '{"repository":{"url":"${{ github.server_url }}/${{ github.repository }}"}}'
