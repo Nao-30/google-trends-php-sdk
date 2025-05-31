@@ -1,84 +1,77 @@
-name: Release
+name: Create Release and Notify Packagist
 
 on:
   push:
     tags:
-      - 'v*.*.*'
+      - 'v*.*.*' # Triggers on tags like v1.0.0, v0.2.1, etc.
 
 jobs:
-  build:
-    name: Create Release
+  release:
+    name: Create GitHub Release
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: write # Required to create GitHub releases and for changelog generator to read commit history
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4 # Use a recent version like v4
         with:
-          fetch-depth: 0
+          fetch-depth: 0 # Important for changelog generator to access full commit history
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.1'
-          extensions: mbstring, xml, ctype, iconv, json, pdo, curl
-          tools: composer:v2
+          php-version: '8.1' # Or your desired PHP version
+          extensions: mbstring, xml, ctype, iconv, json, pdo, curl # Common extensions
+          tools: composer:v2 # Use Composer v2
 
       - name: Validate tag format
         run: |
           if [[ ! ${{ github.ref_name }} =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            echo "Invalid tag format. Must be vX.Y.Z"
+            echo "Error: Invalid tag format. Tag must be in the format vX.Y.Z (e.g., v1.0.0)."
             exit 1
           fi
+        shell: bash
 
-      - name: Install dependencies
+      - name: Install Composer dependencies
         run: composer install --prefer-dist --no-dev --optimize-autoloader
 
       - name: Generate changelog
         id: changelog
-        uses: metcalfc/changelog-generator@v4.6.2
+        uses: metcalfc/changelog-generator@v4.6.2 # Your specified version
         with:
-          myToken: ${{ secrets.GITHUB_TOKEN }}
-          base-ref: 'v0.1.0'
-          head-ref: ${{ github.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }} # GITHUB_TOKEN has necessary permissions
+          base-ref: 'v0.0.1' # Set this to your actual earliest tag or the tag you want to compare against
+          head-ref: ${{ github.ref }} # The current tag being processed
 
-      - name: Create package
+      - name: Create package archive (for GitHub Release asset)
         run: |
           mkdir -p build
-          zip -r build/gtrends-sdk-${{ github.ref_name }}.zip . -x "*.git*" ".github/*" "tests/*" "build/*"
+          # The package name for the zip can be anything, but this is descriptive
+          zip -r build/google-trends-php-sdk-${{ github.ref_name }}.zip . -x ".git/*" ".github/*" "tests/*" "build/*" "vendor/*"
 
-      - name: Create release
+      - name: Create GitHub Release
         id: create_release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2 # Use a recent version like v2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           name: Release ${{ github.ref_name }}
           body: |
-            ## Gtrends PHP SDK ${{ github.ref_name }}
+            ## Google Trends PHP SDK ${{ github.ref_name }}
             
             ${{ steps.changelog.outputs.changelog }}
             
             ## Installation
             
-            ```bash
-            composer require gtrends/sdk
-            ```
+            To install this version:
+            \`\`\`bash
+            composer require nao-30/google-trends-php-sdk:${{ github.ref_name }}
+            \`\`\`
+            Or for the latest stable version:
+            \`\`\`bash
+            composer require nao-30/google-trends-php-sdk
+            \`\`\`
           files: |
-            build/gtrends-sdk-${{ github.ref_name }}.zip
+            build/google-trends-php-sdk-${{ github.ref_name }}.zip
           draft: false
-          prerelease: false
-
-  publish:
-    name: Publish to Packagist
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Trigger Packagist webhook
-        uses: distributhor/workflow-webhook@v3
-        env:
-          webhook_url: ${{ secrets.PACKAGIST_WEBHOOK }}
-          webhook_secret: ${{ secrets.PACKAGIST_TOKEN }}
-          data: '{"repository":{"url":"${{ github.server_url }}/${{ github.repository }}"}}'
+          prerelease: false # Set to true if this is a pre-release (e.g., v1.0.0-beta.1)
