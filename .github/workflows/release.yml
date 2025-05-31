@@ -14,7 +14,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4 # Use a recent version like v4
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0 # Important for changelog generator to access full commit history
 
@@ -38,23 +38,22 @@ jobs:
 
       - name: Generate changelog
         id: changelog
-        uses: metcalfc/changelog-generator@v4.6.2 # Your specified version
+        uses: metcalfc/changelog-generator@v4.6.2
         with:
-          token: ${{ secrets.GITHUB_TOKEN }} # GITHUB_TOKEN has necessary permissions
-          base-ref: 'v0.0.1' # Set this to your actual earliest tag or the tag you want to compare against
+          myToken: ${{ secrets.GITHUB_TOKEN }} # CORRECTED: Changed 'token' to 'myToken'
+          base-ref: 'v0.1.0' # Set this to your actual earliest tag or the tag you want to compare against
           head-ref: ${{ github.ref }} # The current tag being processed
 
       - name: Create package archive (for GitHub Release asset)
         run: |
           mkdir -p build
-          # The package name for the zip can be anything, but this is descriptive
           zip -r build/google-trends-php-sdk-${{ github.ref_name }}.zip . -x ".git/*" ".github/*" "tests/*" "build/*" "vendor/*"
 
       - name: Create GitHub Release
         id: create_release
-        uses: softprops/action-gh-release@v2 # Use a recent version like v2
+        uses: softprops/action-gh-release@v2
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }} # This action (softprops) uses 'token'
           name: Release ${{ github.ref_name }}
           body: |
             ## Google Trends PHP SDK ${{ github.ref_name }}
@@ -74,4 +73,4 @@ jobs:
           files: |
             build/google-trends-php-sdk-${{ github.ref_name }}.zip
           draft: false
-          prerelease: false # Set to true if this is a pre-release (e.g., v1.0.0-beta.1)
+          prerelease: false
